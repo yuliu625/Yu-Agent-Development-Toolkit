@@ -15,14 +15,3 @@ class BaseAgent:
     async def __call__(self, *args, **kwargs):
         ...
 
-
-class AgentFactory:
-    def __init__(self,):
-        ...
-
-    def get_agent(self):
-        ...
-
-
-if __name__ == '__main__':
-    pass
