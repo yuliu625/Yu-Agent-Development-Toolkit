@@ -1,5 +1,5 @@
 """
-
+这是一个graph-builder的Boilerplate。复制下面的代码，然后在具体项目中进行修改。
 """
 
 from langgraph.graph import StateGraph
