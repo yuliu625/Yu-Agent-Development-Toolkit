@@ -2,6 +2,7 @@
 生成LLM的工厂。
 
 以openai兼容API实现的LLM-factory。
+可以基于这个factory进行扩展，以指定更加具体的模型，例如完全无参数获取LLM。
 
 仅需:
 ```shell
