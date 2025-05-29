@@ -5,6 +5,8 @@
     - 指定LLM进行结构化输出，需要从中提取结果。
 """
 
+from __future__ import annotations
+
 import json
 import json5
 import json_repair
@@ -35,7 +37,7 @@ class JsonOutputExtractor:
         raw_str: str,
         index_to_choose: int = -1,
         json_loader_name: Literal['json', 'json5', 'json-repair'] = 'json-repair',
-        schema_pydantic_base_model: 'type[BaseModel]' = None,
+        schema_pydantic_base_model: type[BaseModel] = None,
         schema_check_type: Literal['dict', 'list'] = 'dict',
     ) -> dict | list | None:
         """
@@ -175,7 +177,7 @@ class JsonOutputExtractor:
     @staticmethod
     def check_dict_schema(
         raw_dict_structured_data: dict,
-        schema_pydantic_base_model: 'type[BaseModel]',
+        schema_pydantic_base_model: type[BaseModel],
     ) -> dict | None:
         """
         对于已经可以加载的json数据进行字段检验。
@@ -213,7 +215,7 @@ class JsonOutputExtractor:
     @staticmethod
     def check_list_schema(
         raw_list_structured_data: list,
-        schema_pydantic_base_model: 'type[BaseModel]',
+        schema_pydantic_base_model: type[BaseModel],
     ) -> list | None:
         """
         对于已经可以加载的json数据进行字段检验。对于list。
