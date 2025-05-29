@@ -22,6 +22,8 @@
         因此，message_prompt_template 为我使用 pathlib 修改的方法。不使用 from_template_file ，而是封装了 from_template 。
 """
 
+from __future__ import annotations
+
 from langchain_core.prompts import PromptTemplate
 from langchain_core.prompts import (
     ChatPromptTemplate,
@@ -44,8 +46,9 @@ class PromptTemplateLoader:
     可以在外层构建一个prompt-template-factory，实现完全用strategy-pattern控制prompt-template。
 
     主要方法:
-        - load_prompt_template_from_j2:
-        - load_message_prompt_template_from_j2:
+        - load_prompt_template_from_j2: 最基础的加载prompt-template的方法，可以处理所有的字符串文本。
+        - load_message_prompt_template_from_j2: 最常用的加载message-prompt-template的方法，用于构建message-list。
+        - load_chat_prompt_template_from_j2: 预构建部分llm-chain，自带system-prompt。
     """
 
     # ====主要方法。====
@@ -102,6 +105,76 @@ class PromptTemplateLoader:
                 ai_message_prompt_template_path=message_prompt_template_path,
             )
 
+    # ====主要方法。====
+    @staticmethod
+    def load_chat_prompt_template_from_j2(
+        system_message_prompt_template_path: str | Path,
+        message_place_holder_key: str = 'chat_history',
+    ) -> ChatPromptTemplate:
+        """
+        加载预构建的llm-chain的system-prompt的部分。
+
+        这个方法的目的是分离system-prompt-message和一般消息的部分。
+
+        Args:
+            system_message_prompt_template_path (Union[str, Path]): system-message-prompt-template的存储路径。
+            message_place_holder_key (str, optional): 后续信息占位符key的命名。默认为'chat_history'。
+                参与构建llm-chain后，后续invoke仅传入messages即可。
+                对于MessagesPlaceholder可以进一步指定，但是因为并不常用，该方法并没有实现。
+
+        Returns:
+            ChatPromptTemplate: 可使用invoke传递chat-history的chat-prompt-template。
+        """
+        system_message_prompt_template = PromptTemplateLoader.load_system_message_prompt_template_from_j2(
+            system_message_prompt_template_path=system_message_prompt_template_path,
+        )
+        chat_prompt_template = ChatPromptTemplate.from_messages(
+            messages=[
+                system_message_prompt_template,
+                MessagesPlaceholder(message_place_holder_key),
+            ],
+            template_format='jinja2',
+        )
+        return chat_prompt_template
+
+    # ====主要方法。====
+    @staticmethod
+    def safe_load_chat_prompt_template_from_j2(
+        system_message_prompt_template_path: str | Path,
+        system_message_prompt_template_format_kwargs: dict,
+        message_place_holder_key: str = 'chat_history',
+    ) -> ChatPromptTemplate:
+        """
+        加载预构建的llm-chain的system-prompt的部分。
+
+        这个方法的目的是分离system-prompt-message和一般消息的部分。
+        这个方法与load_chat_prompt_template_from_j2的区别是:
+            - 在加载system_message_prompt_template后就执行format操作，从而避免意外参数导致的错误。
+                但是，会失去一些灵活性，以及自构建message-prompt-template可以避免这些情况。
+
+        Args:
+            system_message_prompt_template_path (Union[str, Path]): system-message-prompt-template的存储路径。
+            system_message_prompt_template_format_kwargs (dict): 对system_message_prompt_template指定format操作的kwargs。
+            message_place_holder_key (str, optional): 后续信息占位符key的命名。默认为'chat_history'。
+                参与构建llm-chain后，后续invoke仅传入messages即可。
+                对于MessagesPlaceholder可以进一步指定，但是因为并不常用，该方法并没有实现。
+
+        Returns:
+            ChatPromptTemplate: 可使用invoke传递chat-history的chat-prompt-template。
+        """
+        system_message_prompt_template = PromptTemplateLoader.load_system_message_prompt_template_from_j2(
+            system_message_prompt_template_path=system_message_prompt_template_path,
+        )
+        system_message = system_message_prompt_template.format(**system_message_prompt_template_format_kwargs)
+        chat_prompt_template = ChatPromptTemplate.from_messages(
+            messages=[
+                system_message,
+                MessagesPlaceholder(message_place_holder_key),
+            ],
+            template_format='jinja2',
+        )
+        return chat_prompt_template
+
     # ====常用方法。====
     @staticmethod
     def load_system_message_prompt_template_from_j2(
@@ -137,63 +210,6 @@ class PromptTemplateLoader:
             template_format='jinja2',
         )
         return ai_message_prompt_template
-
-    # ====主要方法。====
-    @staticmethod
-    def load_chat_prompt_template_from_j2(
-        system_message_prompt_template_path: str | Path,
-        message_place_holder_key: str = 'chat_history',
-    ) -> ChatPromptTemplate:
-        """
-
-        Args:
-            system_message_prompt_template_path (Union[str, Path]):
-            message_place_holder_key (str, optional):
-
-        Returns:
-            ChatPromptTemplate:
-        """
-        system_message_prompt_template = PromptTemplateLoader.load_system_message_prompt_template_from_j2(
-            system_message_prompt_template_path=system_message_prompt_template_path,
-        )
-        chat_prompt_template = ChatPromptTemplate.from_messages(
-            messages=[
-                system_message_prompt_template,
-                MessagesPlaceholder(message_place_holder_key),
-            ],
-            template_format='jinja2',
-        )
-        return chat_prompt_template
-
-    # ====主要方法。====
-    @staticmethod
-    def safe_load_chat_prompt_template_from_j2(
-        system_message_prompt_template_path: str | Path,
-        system_message_prompt_template_format_kwargs: dict,
-        message_place_holder_key: str = 'chat_history',
-    ) -> ChatPromptTemplate:
-        """
-
-        Args:
-            system_message_prompt_template_path (Union[str, Path]):
-            system_message_prompt_template_format_kwargs (dict):
-            message_place_holder_key (str, optional):
-
-        Returns:
-            ChatPromptTemplate:
-        """
-        system_message_prompt_template = PromptTemplateLoader.load_system_message_prompt_template_from_j2(
-            system_message_prompt_template_path=system_message_prompt_template_path,
-        )
-        system_message = system_message_prompt_template.format(**system_message_prompt_template_format_kwargs)
-        chat_prompt_template = ChatPromptTemplate.from_messages(
-            messages=[
-                system_message,
-                MessagesPlaceholder(message_place_holder_key),
-            ],
-            template_format='jinja2',
-        )
-        return chat_prompt_template
 
     # ====已弃用。旧的从指定路径加载prompt-template的方法。====
     @staticmethod
