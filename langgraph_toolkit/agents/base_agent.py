@@ -2,15 +2,17 @@
 基础的agent。
 """
 
-from langchain_core.runnables import Runnable
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from langchain_core.runnables import Runnable
 
 
 class BaseAgent:
     def __init__(
         self,
-        runnable: Runnable,
+        llm_chain: Runnable,
     ):
-        self.runnable = runnable
+        self.llm_chain = llm_chain
 
     async def __call__(self, *args, **kwargs):
         ...
