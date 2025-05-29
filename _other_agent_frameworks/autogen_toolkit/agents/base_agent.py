@@ -93,6 +93,6 @@ class BaseAgent(RoutedAgent):
         else:
             return JsonOutputParser.extract_json_from_str(
                 response,
-                schema_model=self._structured_output_format,
+                schema_pydantic_base_model=self._structured_output_format,
             )
 
