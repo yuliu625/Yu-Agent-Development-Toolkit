@@ -15,11 +15,11 @@
 
 实现细节:
     - message-prompt-template的加载:
-        prompt_template 加载直接使用 langchain 提供的 from_file 方法是没问题的，
-        但是 message_prompt_template 的from_template_file 方法有问题，具体是:
-            - 强制要求 input_variables ，但是签名和 from_template 中不一样。不清楚这样设计的原因。
-            - 无法指定 utf-8 编码，中文文件会出现问题。
-        因此，message_prompt_template 为我使用 pathlib 修改的方法。不使用 from_template_file ，而是封装了 from_template 。
+        prompt_template加载直接使用langchain提供的from_file方法是没问题的，
+        但是message_prompt_template的from_template_file方法有问题，具体是:
+            - 强制要求input_variables，但是签名和from_template中不一样。不清楚这样设计的原因。
+            - 无法指定utf-8编码，中文文件会出现问题。
+        因此，message_prompt_template为我使用pathlib修改的方法。不使用from_template_file，而是封装了from_template。
 """
 
 from __future__ import annotations
