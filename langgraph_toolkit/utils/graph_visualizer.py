@@ -2,6 +2,8 @@
 可视化查看构建的graph的方法。
 """
 
+from __future__ import annotations
+
 from IPython.display import Image, display
 
 from typing import TYPE_CHECKING
