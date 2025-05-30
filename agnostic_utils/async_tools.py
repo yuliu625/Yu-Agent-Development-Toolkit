@@ -4,6 +4,8 @@
 这是一些改造工具，原始项目是可以一开始就写成异步的。
 """
 
+from __future__ import annotations
+
 import asyncio
 
 from typing import Callable, List, Tuple, Any, Coroutine
