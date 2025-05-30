@@ -5,6 +5,8 @@
 更好的构建方法是，根据OpenAI-API标准，使用相关工具构建REST-API服务，
 """
 
+from __future__ import annotations
+
 from langchain.llms import LlamaCpp
 from langchain.llms import GPT4All
 from langchain_community.chat_models import ChatOllama
