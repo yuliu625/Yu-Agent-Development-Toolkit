@@ -8,6 +8,8 @@
     - 结构化参数以json格式传递，并且用markdown-code-cell显式说明。
 """
 
+from __future__ import annotations
+
 import json
 
 
