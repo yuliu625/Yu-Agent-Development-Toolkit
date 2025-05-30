@@ -2,6 +2,8 @@
 来自llm_factory，但是并不使用openai兼容API，而是使用各家具体的client。
 """
 
+from __future__ import annotations
+
 import os
 from dotenv import load_dotenv
 
