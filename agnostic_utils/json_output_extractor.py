@@ -3,6 +3,13 @@
 
 一般的使用场景是:
     - 指定LLM进行结构化输出，需要从中提取结果。
+
+与langchain中的OutputParser的区别:
+    - JsonOutputParser: 同样可以进行json数据的解析，同时支持json和markdown-code-cell中json这2种。我的实现是markdown-code-cell版本。
+        但是，langchain中的实现较为简单，不能自定义相关功能。会默认提取第一个json，只能以最严格的json进行加载。
+    - PydanticOutputParser: langchain中基于JsonOutputParser的派生类，更强大，但是对于pydantic的BaseModel的定义有限。
+    - GuardrailsOutputParser: 调用LLM进行修复json，但是需要额外导入包，并且不是原本的LLM。
+    - RetryWithErrorOutputParser: 重新请求，但是请求方式过于简单，不是原本的请求方法。
 """
 
 from __future__ import annotations
