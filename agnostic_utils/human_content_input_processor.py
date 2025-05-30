@@ -2,6 +2,8 @@
 VLM的HumanMessage.content的处理方法。
 """
 
+from __future__ import annotations
+
 import base64
 
 
@@ -12,6 +14,8 @@ class HumanContentInputProcessor:
     多模态情况下，HumanMessage的content字段需要是list[dict]，即HumanMessage(content=[text_dict | image_dict])。
     使用该工具类处理得到的dict，还需要组合为一个list。
     """
+
+    # ====主要方法。====
     @staticmethod
     def get_image_content_dict_from_base64(
         base64_str: str,
@@ -35,6 +39,7 @@ class HumanContentInputProcessor:
         }
         return image_content_dict
 
+    # ====主要方法。====
     @staticmethod
     def get_image_content_dict_from_uri(
         uri: str,
@@ -61,6 +66,7 @@ class HumanContentInputProcessor:
             image_type=image_type,
         )
 
+    # ====主要方法。====
     @staticmethod
     def get_text_content_dict(
         text: str,
