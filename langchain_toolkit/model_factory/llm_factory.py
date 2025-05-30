@@ -10,8 +10,9 @@ pip install -U langchain-openai
 ```
 """
 
-from langchain_openai import ChatOpenAI
+from __future__ import annotations
 
+from langchain_openai import ChatOpenAI
 import os
 from dotenv import load_dotenv
 
