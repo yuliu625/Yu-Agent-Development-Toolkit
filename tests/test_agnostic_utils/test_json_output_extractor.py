@@ -7,6 +7,18 @@
 import pytest
 
 from agnostic_utils.json_output_extractor import JsonOutputExtractor
+from pydantic import BaseModel, Field
+
+
+class _TestListDataClass(BaseModel):
+    items: list[str] = Field(...)
+
+
+class _TestDictDataClass(BaseModel):
+    a: int
+    b: str
+    c: bool
+
 
 _test_extract_json_from_str_cases = [
     (
