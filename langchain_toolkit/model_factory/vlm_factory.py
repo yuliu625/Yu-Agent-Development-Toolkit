@@ -2,8 +2,9 @@
 具有视觉能力的VLM的factory。
 """
 
-from langchain_openai import ChatOpenAI
+from __future__ import annotations
 
+from langchain_openai import ChatOpenAI
 import os
 from dotenv import load_dotenv
 
