@@ -63,7 +63,7 @@ class PromptTemplateLoader:
             prompt_template_path (Union[str, Path]): prompt-template在本地保存的路径。
 
         Returns:
-            (PromptTemplate), 可以进行langchain中相关操作的prompt-template。
+            PromptTemplate: 可以进行langchain中相关操作的prompt-template。
         """
         prompt_template = PromptTemplate.from_file(
             template_file=prompt_template_path,
@@ -235,7 +235,7 @@ class PromptTemplateLoader:
             file_path: .txt文件的路径。
 
         Returns:
-            (str), 读取的str文本。
+            str: 读取的str文本。
         """
         file_path = Path(file_path)
         text = file_path.read_text(encoding='utf-8')
