@@ -12,6 +12,14 @@ from typing import TYPE_CHECKING
 
 
 class TestBaseAgent:
-    def test_base_agent(self):
-        ...
+    def test_base_agent(self, chat_prompt_template, llm):
+        agent = BaseAgent(
+            chat_prompt_template=chat_prompt_template,
+            llm=llm,
+        )
+        response = agent.call_llm_with_retry(
+            chat_prompt_template=chat_prompt_template,
+            llm=llm,
+            chat_history=[]
+        )
 
