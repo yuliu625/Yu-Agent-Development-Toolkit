@@ -4,9 +4,9 @@
 使用我构建的工具类JsonOutputExtractor，但是简化大量可设置的参数。
 
 预期的派生类:
-    - NormalAgent: 普通的对话agent。
-    - JsonAgent: 可以有结构化数据输出的agent。
-    - PydanticAgent: 强制输出符合schema的输出。
+    - NormalAgent: 普通的对话agent。完全没有结构化数据相关的需求。
+    - JsonAgent: 有结构化数据输出的agent。但并不提取结构化输出，仅以规范的方式与其他agent进行对话。
+    - PydanticAgent: 强制输出符合schema的输出。需要使用结构化输出进行计算或指令。
 """
 
 from __future__ import annotations
@@ -14,23 +14,26 @@ from __future__ import annotations
 # 下面这个工具类是必要的，需要在具体项目中设定具体的导入路径。
 from agnostic_utils.json_output_extractor import JsonOutputExtractor
 
+from langchain_core.messages import AIMessage
+
 from typing import TYPE_CHECKING, Literal
 if TYPE_CHECKING:
     from langchain_core.language_models import BaseChatModel
-    from langchain_core.messages import AIMessage, AnyMessage
+    from langchain_core.messages import AnyMessage
     from langchain_core.prompts import ChatPromptTemplate
     from pydantic import BaseModel
 
 
 class BaseAgent:
     """
-    基础的agent。
+    基础的agent。具体结构化数据提取的功能。
 
     注意:
         - 没有chat-history维护的功能，仅持有system-prompt的状态。如果实现:
             - langchain: 在派生类中以属性维护。
             - langgraph: 维护图状态。
             2种实现派生类均需要实现chat-history的管理，可灵活自定义。
+        - 多模态支持。熟悉命名中为llm，但也支持vlm。如果实现，需要相关的chat-history方法支持。
 
     具有功能:
         - 请求LLM进行生成。
@@ -68,6 +71,7 @@ class BaseAgent:
         self._schema_pydantic_base_model = schema_pydantic_base_model
         self._schema_check_type = schema_check_type
 
+    # ====最基础方法。====
     @staticmethod
     def call_llm(
         chat_prompt_template: ChatPromptTemplate,
@@ -75,7 +79,7 @@ class BaseAgent:
         chat_history: list[AnyMessage],
     ) -> AIMessage:
         """
-        构建chain进行生成。
+        构建chain，进行内容生成。
 
         这是一个最常用的chain。独立构建是为了:
             - 自主维护chat-history。
@@ -98,6 +102,7 @@ class BaseAgent:
         assert isinstance(response, AIMessage)
         return response
 
+    # ====主要方法。====
     def call_llm_with_retry(
         self,
         chat_prompt_template: ChatPromptTemplate,
@@ -142,6 +147,7 @@ class BaseAgent:
                 # 如果是有内容的，返回响应。
                 return response
 
+    # ====工具方法。====
     def get_structured_output(
         self,
         raw_str: str,
@@ -169,4 +175,9 @@ class BaseAgent:
             schema_pydantic_base_model=self._schema_pydantic_base_model,
             schema_check_type=self._schema_check_type,
         )
+
+    # ====冗余方法。====
+    @staticmethod
+    def get_chat_prompt_template():
+        ...
 
