@@ -16,7 +16,7 @@ from langchain_openai import ChatOpenAI
 import os
 from dotenv import load_dotenv
 
-from typing import Annotated
+from typing import Literal, Annotated
 
 
 class LLMFactory:
@@ -37,6 +37,38 @@ class LLMFactory:
             dotenv_path: (str), .env文件的路径。不指定会自行寻找。
         """
         load_dotenv(dotenv_path=dotenv_path, override=True)
+
+    # ====主要方法。====
+    @staticmethod
+    def get_llm(
+        model_client: Literal['openai', 'google', 'anthropic', 'dashscope', 'deepseek'],
+        model_name: str,
+        **kwargs,
+    ) -> ChatOpenAI:
+        """
+        使用strategy-pattern封装的全部的方法。
+
+        复杂构造仍需要传递对象参数。
+        可以直接使用该工具类中其他方法。
+
+        Args:
+            model_client (Literal['openai', 'google', 'anthropic', 'dashscope', 'deepseek']): 模型的供应商。
+            model_name (str): 具体模型的型号。
+            **kwargs: 对于ChatOpenAI构造函数指定的kwargs。
+
+        Returns:
+            ChatOpenAI: langchain中可用于对话的LLM。
+        """
+        if model_client == 'openai':
+            return LLMFactory.get_openai_llm(model=model_name, **kwargs)
+        elif model_client == 'google':
+            return LLMFactory.get_google_llm(model=model_name, **kwargs)
+        elif model_client == 'anthropic':
+            return LLMFactory.get_anthropic_llm(model=model_name, **kwargs)
+        elif model_client == 'dashscope':
+            return LLMFactory.get_dashscope_llm(model=model_name, **kwargs)
+        elif model_client == 'deepseek':
+            return LLMFactory.get_deepseek_llm(model=model_name, **kwargs)
 
     @staticmethod
     def get_openai_llm(
