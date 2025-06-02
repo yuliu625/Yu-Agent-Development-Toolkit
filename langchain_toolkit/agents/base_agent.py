@@ -19,7 +19,7 @@ from langchain_core.messages import AIMessage
 from typing import TYPE_CHECKING, Literal
 if TYPE_CHECKING:
     from langchain_core.language_models import BaseChatModel
-    from langchain_core.messages import AnyMessage
+    from langchain_core.messages import AnyMessage, SystemMessage
     from langchain_core.prompts import ChatPromptTemplate
     from pydantic import BaseModel
 
@@ -87,6 +87,11 @@ class BaseAgent:
 
         注意:
             - 约定chat_history是以'chat_history'这个key传递。
+            - 对于传入的chat_prompt_template，它是以system-message而不是以system-message-prompt-template初始化的。因为:
+                - system-message更加安全。
+                - system-message-prompt-template可以提前format。
+                - chat_prompt_template可以以partial实现类似的效果，但复杂化问题。
+                - 这个类默认是固定身份的agent，并处于确定的计算图。
             - 默认LLM的响应一定是AIMessage。
 
         Args:
@@ -178,6 +183,10 @@ class BaseAgent:
 
     # ====冗余方法。====
     @staticmethod
-    def get_chat_prompt_template():
-        ...
+    def get_chat_prompt_template(
+        system_message: SystemMessage,
+    ):
+        """
+        这是个冗余的方法。配套使用PromptTemplateLoader是直接可以加载chat_prompt_template的。
+        """
 
