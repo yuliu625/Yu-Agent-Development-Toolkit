@@ -165,7 +165,11 @@ class PromptTemplateLoader:
         system_message_prompt_template = PromptTemplateLoader.load_system_message_prompt_template_from_j2(
             system_message_prompt_template_path=system_message_prompt_template_path,
         )
-        system_message = system_message_prompt_template.format(**system_message_prompt_template_format_kwargs)
+        # system_message_prompt_template_format_kwargs为None时的兼容性处理。
+        if system_message_prompt_template_format_kwargs:
+            system_message = system_message_prompt_template.format(**system_message_prompt_template_format_kwargs)
+        else:
+            system_message = system_message_prompt_template.format()
         chat_prompt_template = ChatPromptTemplate.from_messages(
             messages=[
                 system_message,
