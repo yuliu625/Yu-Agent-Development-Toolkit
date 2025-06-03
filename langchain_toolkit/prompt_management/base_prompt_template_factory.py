@@ -5,7 +5,7 @@
     - PromptTemplateLoader。
 
 约定:
-    -
+    - 以前缀区分prompt-template。
 """
 
 from __future__ import annotations
