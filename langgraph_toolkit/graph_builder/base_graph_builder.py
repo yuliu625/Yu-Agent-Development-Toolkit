@@ -21,7 +21,7 @@ class BaseGraphBuilder:
     ) -> CompiledStateGraph:
         self._add_nodes()
         self._add_edges()
-        graph = self.graph_builder.compiled()
+        graph = self.graph_builder.compile()
         return graph
 
     def _add_nodes(self):
