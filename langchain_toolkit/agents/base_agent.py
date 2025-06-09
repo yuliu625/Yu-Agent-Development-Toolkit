@@ -16,7 +16,7 @@ from agnostic_utils.json_output_extractor import JsonOutputExtractor
 
 from langchain_core.messages import AIMessage
 
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Literal, cast
 if TYPE_CHECKING:
     from langchain_core.language_models import BaseChatModel
     from langchain_core.messages import AnyMessage, SystemMessage
@@ -104,14 +104,26 @@ class BaseAgent:
         """
         llm_chain = chat_prompt_template | llm
         response = llm_chain.invoke(input={'chat_history': chat_history})
-        assert isinstance(response, AIMessage)
+        response = cast(AIMessage, response)
+        # assert isinstance(response, AIMessage)
+        return response
+
+    # ====最基础方法。====
+    @staticmethod
+    async def a_call_llm(
+        chat_prompt_template: ChatPromptTemplate,
+        llm: BaseChatModel,
+        chat_history: list[AnyMessage],
+    ) -> AIMessage:
+        llm_chain = chat_prompt_template | llm
+        response = await llm_chain.ainvoke(input={'chat_history': chat_history})
+        response = cast(AIMessage, response)
+        # assert isinstance(response, AIMessage)
         return response
 
     # ====主要方法。====
     def call_llm_with_retry(
         self,
-        chat_prompt_template: ChatPromptTemplate,
-        llm: BaseChatModel,
         chat_history: list[AnyMessage],
     ) -> AIMessage:
         """
@@ -120,14 +132,14 @@ class BaseAgent:
         需要使用:
             - JsonOutputExtractor: 已构建的工具类。
             - self.call_llm: 进行一般请求。
+            - self._chat_prompt_template (ChatPromptTemplate): 构建的chat-prompt-template，一般仅包含system-prompt。
+            - self._llm (BaseChatModel): chat-model，可以生成内容。            -
             - self._is_need_structured_output: 是否需要结构化输出。如果不需要，仅一次响应。
             - self._max_retries: 最大尝试生成次数。
             - self._schema_pydantic_base_model: 在需要结构化输出的情况下，进行dataclass检验。
             - self._schema_check_type: 在需要结构化输出的情况下，进行dataclass检验的类型。
 
         Args:
-            chat_prompt_template (ChatPromptTemplate): 构建的chat-prompt-template，一般仅包含system-prompt。
-            llm (BaseChatModel): chat-model，可以生成内容。
             chat_history (list[AnyMessage]): 过去的对话记录。
 
         Returns:
@@ -136,15 +148,39 @@ class BaseAgent:
         # 如果不需要结构化输出，得到一次请求的响应即可。
         if not self._is_need_structured_output:
             return self.call_llm(
-                chat_prompt_template=chat_prompt_template,
-                llm=llm,
+                chat_prompt_template=self._chat_prompt_template,
+                llm=self._llm,
                 chat_history=chat_history,
             )
         # 如果需要结构化输出，在最大可重试次数内进行请求。
         for _ in range(self._max_retries):
             response = self.call_llm(
-                chat_prompt_template=chat_prompt_template,
-                llm=llm,
+                chat_prompt_template=self._chat_prompt_template,
+                llm=self._llm,
+                chat_history=chat_history,
+            )
+            # 检测响应内容，是否符合结构化输出要求。
+            if self.get_structured_output(raw_str=response.content):
+                # 如果是有内容的，返回响应。
+                return response
+
+    # ====主要方法。====
+    async def a_call_llm_with_retry(
+        self,
+        chat_history: list[AnyMessage],
+    ) -> AIMessage:
+        # 如果不需要结构化输出，得到一次请求的响应即可。
+        if not self._is_need_structured_output:
+            return await self.a_call_llm(
+                chat_prompt_template=self._chat_prompt_template,
+                llm=self._llm,
+                chat_history=chat_history,
+            )
+        # 如果需要结构化输出，在最大可重试次数内进行请求。
+        for _ in range(self._max_retries):
+            response = await self.a_call_llm(
+                chat_prompt_template=self._chat_prompt_template,
+                llm=self._llm,
                 chat_history=chat_history,
             )
             # 检测响应内容，是否符合结构化输出要求。
