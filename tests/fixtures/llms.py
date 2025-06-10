@@ -5,7 +5,7 @@
 from __future__ import annotations
 import pytest
 
-from langchain_toolkit.model_factory.base_llm_factory import LLMFactory
+from langchain_toolkit.model_factory.base_llm_factory import BaseLLMFactory
 
 from typing import TYPE_CHECKING
 # if TYPE_CHECKING:
@@ -13,6 +13,6 @@ from typing import TYPE_CHECKING
 
 @pytest.fixture
 def qwen_plus():
-    qwen_plus = LLMFactory().get_dashscope_llm('qwen-plus')
+    qwen_plus = BaseLLMFactory().get_dashscope_llm('qwen-plus')
     return qwen_plus
 
