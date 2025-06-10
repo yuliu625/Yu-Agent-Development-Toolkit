@@ -29,7 +29,7 @@ class VLMFactory:
 
     @staticmethod
     def get_dashscope_vlm(
-        model: Annotated[str, "qwen系列模型的名字"] = 'qwen-vl-max-latest',
+        model_name: Annotated[str, "qwen系列模型的名字"] = 'qwen-vl-max-latest',
         **kwargs,
     ):
         """
@@ -40,7 +40,7 @@ class VLMFactory:
             langchain中的MultiModalLLM。这里是qwen-vl-max，我默认使用这个。
         """
         dashscope_multi_modal_llm = ChatOpenAI(
-            model_name=model,
+            model_name=model_name,
             api_key=os.environ['DASHSCOPE_API_KEY'],
             vl_high_resolution_images=True,  # 因为文档的缺失，不是很确定这个参数是否有效。为了冗余，会在每次请求时额外再指定。
             **kwargs,
