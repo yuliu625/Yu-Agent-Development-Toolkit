@@ -19,7 +19,7 @@ from dotenv import load_dotenv
 from typing import Literal, Annotated
 
 
-class LLMFactory:
+class BaseLLMFactory:
     """
     默认的全部以openai兼容API实现的LLM-factory。
     """
@@ -60,15 +60,15 @@ class LLMFactory:
             ChatOpenAI: langchain中可用于对话的LLM。
         """
         if model_client == 'openai':
-            return LLMFactory.get_openai_llm(model_name=model_name, **kwargs)
+            return BaseLLMFactory.get_openai_llm(model_name=model_name, **kwargs)
         elif model_client == 'google':
-            return LLMFactory.get_google_llm(model_name=model_name, **kwargs)
+            return BaseLLMFactory.get_google_llm(model_name=model_name, **kwargs)
         elif model_client == 'anthropic':
-            return LLMFactory.get_anthropic_llm(model_name=model_name, **kwargs)
+            return BaseLLMFactory.get_anthropic_llm(model_name=model_name, **kwargs)
         elif model_client == 'dashscope':
-            return LLMFactory.get_dashscope_llm(model_name=model_name, **kwargs)
+            return BaseLLMFactory.get_dashscope_llm(model_name=model_name, **kwargs)
         elif model_client == 'deepseek':
-            return LLMFactory.get_deepseek_llm(model_name=model_name, **kwargs)
+            return BaseLLMFactory.get_deepseek_llm(model_name=model_name, **kwargs)
 
     @staticmethod
     def get_openai_llm(
