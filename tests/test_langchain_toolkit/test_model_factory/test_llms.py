@@ -7,7 +7,7 @@ LLM的测试工程。
 from __future__ import annotations
 import pytest
 
-from langchain_toolkit.model_factory.base_llm_factory import LLMFactory
+from langchain_toolkit.model_factory.base_llm_factory import BaseLLMFactory
 from langchain_core.messages import AIMessage
 
 from typing import TYPE_CHECKING
@@ -22,7 +22,7 @@ class TestLLMs:
             ('gpt-4o-mini', _text_message_1),
         ])
     def test_openai_llm(self, model, message):
-        llm = LLMFactory.get_openai_llm(model_name=model)
+        llm = BaseLLMFactory.get_openai_llm(model_name=model)
         response = llm.invoke(message)
         print(response)
         assert isinstance(response, AIMessage)
@@ -32,7 +32,7 @@ class TestLLMs:
             ('gemini-2.5-flash', _text_message_1),
         ])
     def test_google_llm(self, model, message):
-        llm = LLMFactory.get_google_llm(model=model)
+        llm = BaseLLMFactory.get_google_llm(model=model)
         response = llm.invoke(message)
         print(response)
         assert isinstance(response, AIMessage)
@@ -42,7 +42,7 @@ class TestLLMs:
             ('claude-opus-4', _text_message_1),
         ])
     def test_anthropic_llm(self, model, message):
-        llm = LLMFactory.get_anthropic_llm(model_name=model)
+        llm = BaseLLMFactory.get_anthropic_llm(model_name=model)
         response = llm.invoke(message)
         print(response)
         assert isinstance(response, AIMessage)
@@ -52,7 +52,7 @@ class TestLLMs:
             ('qwen-plus', _text_message_1),
         ])
     def test_dashscope_llm(self, model, message):
-        llm = LLMFactory.get_dashscope_llm(model_name=model)
+        llm = BaseLLMFactory.get_dashscope_llm(model_name=model)
         response = llm.invoke(message)
         print(response)
         assert isinstance(response, AIMessage)
@@ -62,7 +62,7 @@ class TestLLMs:
             ('deepseek-chat', _text_message_1),
         ])
     def test_deepseek_llm(self, model, message):
-        llm = LLMFactory.get_deepseek_llm(model)
+        llm = BaseLLMFactory.get_deepseek_llm(model)
         response = llm.invoke(message)
         print(response)
         assert isinstance(response, AIMessage)
