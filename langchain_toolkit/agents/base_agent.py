@@ -104,7 +104,7 @@ class BaseAgent:
         """
         llm_chain = chat_prompt_template | llm
         response = llm_chain.invoke(input={'chat_history': chat_history})
-        response = cast(AIMessage, response)
+        response = cast('AIMessage', response)
         # assert isinstance(response, AIMessage)
         return response
 
@@ -117,7 +117,7 @@ class BaseAgent:
     ) -> AIMessage:
         llm_chain = chat_prompt_template | llm
         response = await llm_chain.ainvoke(input={'chat_history': chat_history})
-        response = cast(AIMessage, response)
+        response = cast('AIMessage', response)
         # assert isinstance(response, AIMessage)
         return response
 
@@ -133,7 +133,7 @@ class BaseAgent:
             - JsonOutputExtractor: 已构建的工具类。
             - self.call_llm: 进行一般请求。
             - self._chat_prompt_template (ChatPromptTemplate): 构建的chat-prompt-template，一般仅包含system-prompt。
-            - self._llm (BaseChatModel): chat-model，可以生成内容。            -
+            - self._llm (BaseChatModel): chat-model，可以生成内容。
             - self._is_need_structured_output: 是否需要结构化输出。如果不需要，仅一次响应。
             - self._max_retries: 最大尝试生成次数。
             - self._schema_pydantic_base_model: 在需要结构化输出的情况下，进行dataclass检验。
