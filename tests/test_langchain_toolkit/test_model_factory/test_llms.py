@@ -22,7 +22,7 @@ class TestLLMs:
             ('gpt-4o-mini', _text_message_1),
         ])
     def test_openai_llm(self, model, message):
-        llm = LLMFactory.get_openai_llm(model=model)
+        llm = LLMFactory.get_openai_llm(model_name=model)
         response = llm.invoke(message)
         print(response)
         assert isinstance(response, AIMessage)
@@ -42,7 +42,7 @@ class TestLLMs:
             ('claude-opus-4', _text_message_1),
         ])
     def test_anthropic_llm(self, model, message):
-        llm = LLMFactory.get_anthropic_llm(model=model)
+        llm = LLMFactory.get_anthropic_llm(model_name=model)
         response = llm.invoke(message)
         print(response)
         assert isinstance(response, AIMessage)
@@ -52,7 +52,7 @@ class TestLLMs:
             ('qwen-plus', _text_message_1),
         ])
     def test_dashscope_llm(self, model, message):
-        llm = LLMFactory.get_dashscope_llm(model=model)
+        llm = LLMFactory.get_dashscope_llm(model_name=model)
         response = llm.invoke(message)
         print(response)
         assert isinstance(response, AIMessage)
