@@ -7,7 +7,7 @@ LLM的测试工程。
 from __future__ import annotations
 import pytest
 
-from langchain_toolkit.model_factory.llm_factory import LLMFactory
+from langchain_toolkit.model_factory.base_llm_factory import LLMFactory
 from langchain_core.messages import AIMessage
 
 from typing import TYPE_CHECKING
