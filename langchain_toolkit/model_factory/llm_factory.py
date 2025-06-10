@@ -60,23 +60,23 @@ class LLMFactory:
             ChatOpenAI: langchain中可用于对话的LLM。
         """
         if model_client == 'openai':
-            return LLMFactory.get_openai_llm(model=model_name, **kwargs)
+            return LLMFactory.get_openai_llm(model_name=model_name, **kwargs)
         elif model_client == 'google':
-            return LLMFactory.get_google_llm(model=model_name, **kwargs)
+            return LLMFactory.get_google_llm(model_name=model_name, **kwargs)
         elif model_client == 'anthropic':
-            return LLMFactory.get_anthropic_llm(model=model_name, **kwargs)
+            return LLMFactory.get_anthropic_llm(model_name=model_name, **kwargs)
         elif model_client == 'dashscope':
-            return LLMFactory.get_dashscope_llm(model=model_name, **kwargs)
+            return LLMFactory.get_dashscope_llm(model_name=model_name, **kwargs)
         elif model_client == 'deepseek':
-            return LLMFactory.get_deepseek_llm(model=model_name, **kwargs)
+            return LLMFactory.get_deepseek_llm(model_name=model_name, **kwargs)
 
     @staticmethod
     def get_openai_llm(
-        model: Annotated[str, "chatgpt系列模型的名字"] = 'gpt-4o-mini',
+        model_name: Annotated[str, "chatgpt系列模型的名字"] = 'gpt-4o-mini',
         **kwargs,
     ) -> ChatOpenAI:
         llm = ChatOpenAI(
-            model=model,
+            model_name=model_name,
             base_url=os.environ['OPENAI_API_BASE_URL'],
             api_key=os.environ['OPENAI_API_KEY'],
             **kwargs,
@@ -85,11 +85,11 @@ class LLMFactory:
 
     @staticmethod
     def get_google_llm(
-        model: Annotated[str, "gemini系列模型的名字"] = 'gemini-2.5-flash-preview-05-20',
+        model_name: Annotated[str, "gemini系列模型的名字"] = 'gemini-2.5-flash-preview-05-20',
         **kwargs,
     ) -> ChatOpenAI:
         llm = ChatOpenAI(
-            model=model,
+            model_name=model_name,
             base_url=os.environ['GEMINI_API_BASE_URL'],
             api_key=os.environ['GEMINI_API_KEY'],
             **kwargs,
@@ -98,11 +98,11 @@ class LLMFactory:
 
     @staticmethod
     def get_anthropic_llm(
-        model: Annotated[str, "claude系列模型的名字"] = 'claude-opus-4-20250514',
+        model_name: Annotated[str, "claude系列模型的名字"] = 'claude-opus-4-20250514',
         **kwargs,
     ) -> ChatOpenAI:
         llm = ChatOpenAI(
-            model=model,
+            model_name=model_name,
             base_url=os.environ['ANTHROPIC_API_BASE_URL'],
             api_key=os.environ['ANTHROPIC_API_KEY'],
             **kwargs,
@@ -111,11 +111,11 @@ class LLMFactory:
 
     @staticmethod
     def get_dashscope_llm(
-        model: Annotated[str, "qwen系列模型的名字"] = 'qwen-max',
+        model_name: Annotated[str, "qwen系列模型的名字"] = 'qwen-max',
         **kwargs,
     ) -> ChatOpenAI:
         llm = ChatOpenAI(
-            model=model,
+            model_name=model_name,
             base_url=os.environ['DASHSCOPE_API_BASE_URL'],
             api_key=os.environ['DASHSCOPE_API_KEY'],
             **kwargs,
@@ -124,11 +124,11 @@ class LLMFactory:
 
     @staticmethod
     def get_deepseek_llm(
-        model: Annotated[str, "deepseek系列模型的名字"] = 'deepseek-chat',
+        model_name: Annotated[str, "deepseek系列模型的名字"] = 'deepseek-chat',
         **kwargs,
     ) -> ChatOpenAI:
         llm = ChatOpenAI(
-            model=model,
+            model_name=model_name,
             base_url=os.environ['DEEPSEEK_API_BASE_URL'],
             api_key=os.environ['DEEPSEEK_API_KEY'],
             **kwargs,
