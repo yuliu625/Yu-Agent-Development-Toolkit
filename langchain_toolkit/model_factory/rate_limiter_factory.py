@@ -48,7 +48,7 @@ class RateLimiterFactory:
         return InMemoryRateLimiter(
             requests_per_second=1 / llm_number,
             check_every_n_seconds=0.1,
-            max_bucket_size=10 / llm_number,
+            max_bucket_size=10,
         )
 
     @staticmethod
@@ -59,7 +59,7 @@ class RateLimiterFactory:
         return InMemoryRateLimiter(
             requests_per_second=1 / llm_number,
             check_every_n_seconds=0.1,
-            max_bucket_size=10 / llm_number,
+            max_bucket_size=10,
         )
 
     @staticmethod
@@ -70,7 +70,7 @@ class RateLimiterFactory:
         return InMemoryRateLimiter(
             requests_per_second=1 / llm_number,
             check_every_n_seconds=0.1,
-            max_bucket_size=10 / llm_number,
+            max_bucket_size=10,
         )
 
     @staticmethod
@@ -85,21 +85,21 @@ class RateLimiterFactory:
             return InMemoryRateLimiter(
                 requests_per_second=(1200-1)/60 / llm_number,
                 check_every_n_seconds=0.1,
-                max_bucket_size=10 / llm_number,
+                max_bucket_size=10,
             )
         elif model_name in (
-            'qwen-plus'
+            'qwen-plus', 'qwen-plus-latest',
         ):
             return InMemoryRateLimiter(
                 requests_per_second=(15000-1)/60 / llm_number,
                 check_every_n_seconds=0.1,
-                max_bucket_size=10 / llm_number,
+                max_bucket_size=10,
             )
         else:
             return InMemoryRateLimiter(
                 requests_per_second=1 / llm_number,
                 check_every_n_seconds=0.1,
-                max_bucket_size=10 / llm_number,
+                max_bucket_size=10,
             )
 
     @staticmethod
@@ -110,6 +110,6 @@ class RateLimiterFactory:
         return InMemoryRateLimiter(
             requests_per_second=(60-1)/60 / llm_number,
             check_every_n_seconds=0.1,
-            max_bucket_size=10 / llm_number,
+            max_bucket_size=10,
         )
 
