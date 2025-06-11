@@ -15,8 +15,9 @@ from __future__ import annotations
 from agnostic_utils.json_output_extractor import JsonOutputExtractor
 
 from langchain_core.messages import AIMessage
+from collections import Counter
 
-from typing import TYPE_CHECKING, Literal, cast
+from typing import TYPE_CHECKING, Literal, Self, cast
 if TYPE_CHECKING:
     from langchain_core.language_models import BaseChatModel
     from langchain_core.messages import AnyMessage, SystemMessage
@@ -216,6 +217,32 @@ class BaseAgent:
             schema_pydantic_base_model=self._schema_pydantic_base_model,
             schema_check_type=self._schema_check_type,
         )
+
+    # ====工具方法。====
+    def format_system_prompt_template(
+        self,
+        format_kwargs: dict,
+    ) -> Self:
+        """
+        在已经构建agent后，安全格式化system-message-prompt-template。
+
+        会进行严格检测input-variables和format-kwargs的一致性。
+        这个方法设计为只执行一次。
+
+        Args:
+            format_kwargs (dict): 对system-message-prompt-template进行partial的参数。
+
+        Returns:
+            Self: 处理后的对象。
+        """
+        # 检测原始system-message-prompt-template中的变量。
+        system_message_prompt_template_input_variables = list(self._chat_prompt_template.input_variables)
+        system_message_prompt_template_input_variables.remove('chat_history')  # 仅修改副本的记录。
+        # 判断。变量名必须完全一致，一次完成format。
+        assert Counter(system_message_prompt_template_input_variables) == Counter(list(format_kwargs.keys()))
+        # 修改chat-prompt-template。实际意义等同将system-message-prompt-template处理为system-message。
+        self._chat_prompt_template = self._chat_prompt_template.partial(**format_kwargs)
+        return self
 
     # ====冗余方法。====
     @staticmethod
