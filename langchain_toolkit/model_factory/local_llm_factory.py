@@ -10,8 +10,10 @@ from __future__ import annotations
 from langchain.llms import LlamaCpp
 from langchain.llms import GPT4All
 from langchain_community.chat_models import ChatOllama
+from langchain_openai import ChatOpenAI
+from pathlib import Path
 
-from typing import TYPE_CHECKING, Annotated
+from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from langchain_core.language_models import BaseChatModel
 
@@ -27,11 +29,15 @@ class LocalLLMFactory:
     def get_local_llm_by_url(
         url: str,
     ) -> BaseChatModel:
-        ...
+        llm = ChatOpenAI(
+            base_url=url,
+        )
+        return llm
 
     @staticmethod
     def get_huggingface_llm_by_key(
         key: str,
+        models_dir: str | Path,
     ) -> BaseChatModel:
         ...
 
