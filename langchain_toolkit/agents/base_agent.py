@@ -15,6 +15,7 @@ from __future__ import annotations
 from agnostic_utils.json_output_extractor import JsonOutputExtractor
 
 from langchain_core.messages import AIMessage
+
 from collections import Counter
 
 from typing import TYPE_CHECKING, Literal, Self, cast
@@ -39,6 +40,10 @@ class BaseAgent:
     具有功能:
         - 请求LLM进行生成。
         - 结构化输出校验和重试。
+
+    预期使用方法:
+        - 继承该超类，指定BaseAgent类型，仅管理chat-history，使用call_llm_with_retry方法。
+        - 如果需要，对于具体的LLM，重写call_llm方法。
     """
     def __init__(
         self,
@@ -73,8 +78,8 @@ class BaseAgent:
         self._schema_check_type = schema_check_type
 
     # ====最基础方法。====
-    @staticmethod
     def call_llm(
+        self,
         chat_prompt_template: ChatPromptTemplate,
         llm: BaseChatModel,
         chat_history: list[AnyMessage],
@@ -110,12 +115,13 @@ class BaseAgent:
         return response
 
     # ====最基础方法。====
-    @staticmethod
     async def a_call_llm(
+        self,
         chat_prompt_template: ChatPromptTemplate,
         llm: BaseChatModel,
         chat_history: list[AnyMessage],
     ) -> AIMessage:
+        """call_llm的异步版本。"""
         llm_chain = chat_prompt_template | llm
         response = await llm_chain.ainvoke(input={'chat_history': chat_history})
         response = cast('AIMessage', response)
@@ -170,6 +176,7 @@ class BaseAgent:
         self,
         chat_history: list[AnyMessage],
     ) -> AIMessage:
+        """call_llm_with_retry的异步版本。"""
         # 如果不需要结构化输出，得到一次请求的响应即可。
         if not self._is_need_structured_output:
             return await self.a_call_llm(
