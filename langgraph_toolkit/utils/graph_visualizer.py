@@ -30,7 +30,7 @@ class GraphVisualizer:
         Returns:
             (str), mermaid-code，使用print打印返回结果，然后复制。
         """
-        mermaid_code = graph.get_graph().draw_mermaid()
+        mermaid_code = graph.get_graph(xray=True).draw_mermaid()
         # print(mermaid_code)
         return mermaid_code
 
@@ -51,7 +51,7 @@ class GraphVisualizer:
             (Image), png图片，默认渲染效果不好。
             在ipynb中，可以直接打印graph生成图片，不需要该方法。。
         """
-        mermaid_png = Image(graph.get_graph().draw_mermaid_png())
+        mermaid_png = Image(graph.get_graph(xray=True).draw_mermaid_png())
         display(mermaid_png)
         return mermaid_png
 
@@ -70,6 +70,6 @@ class GraphVisualizer:
         Returns:
             (Image), png图片，渲染的时候保存至指定路径。
         """
-        mermaid_png = Image(graph.get_graph().draw_mermaid_png(output_file_path=output_file_path))
+        mermaid_png = Image(graph.get_graph(xray=True).draw_mermaid_png(output_file_path=output_file_path))
         return mermaid_png
 
