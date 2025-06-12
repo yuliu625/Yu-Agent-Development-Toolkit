@@ -180,7 +180,7 @@ class BasePromptTemplateFactory:
         return prompt_template
 
     # ====控制方法。派生类最多在构造方法中调用一次。====
-    def _set_sub_dir(
+    def set_sub_dir(
         self,
         sub_dir: str | Path
     ) -> None:
