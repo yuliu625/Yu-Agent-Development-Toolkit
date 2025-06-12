@@ -23,6 +23,8 @@ class RateLimiterFactory:
     """
     以strategy-pattern封装的速率限制器。
     """
+
+    # ====主要方法。====
     @staticmethod
     def get_rate_limiter(
         model_client: Literal['openai', 'google', 'anthropic', 'dashscope', 'deepseek'],
@@ -46,7 +48,7 @@ class RateLimiterFactory:
         llm_number: int = 1,
     ) -> InMemoryRateLimiter:
         return InMemoryRateLimiter(
-            requests_per_second=1 / llm_number,
+            requests_per_second=(60-1)/60 / llm_number,
             check_every_n_seconds=0.1,
             max_bucket_size=10,
         )
@@ -57,7 +59,7 @@ class RateLimiterFactory:
         llm_number: int = 1,
     ) -> InMemoryRateLimiter:
         return InMemoryRateLimiter(
-            requests_per_second=1 / llm_number,
+            requests_per_second=(60-1)/60 / llm_number,
             check_every_n_seconds=0.1,
             max_bucket_size=10,
         )
@@ -68,7 +70,7 @@ class RateLimiterFactory:
         llm_number: int = 1,
     ) -> InMemoryRateLimiter:
         return InMemoryRateLimiter(
-            requests_per_second=1 / llm_number,
+            requests_per_second=(60-1)/60 / llm_number,
             check_every_n_seconds=0.1,
             max_bucket_size=10,
         )
@@ -79,8 +81,8 @@ class RateLimiterFactory:
         llm_number: int = 1,
     ) -> InMemoryRateLimiter:
         if model_name in (
-            'qwen-max', 'qwen-turbo', 'qwen-long',
-            'qwen-vl-max', 'qwen-vl-plus',
+            'qwen-max', 'qwen-max-latest', 'qwen-turbo', 'qwen-turbo-latest', 'qwen-long', 'qwen-long-latest',
+            'qwen-vl-max', 'qwen-vl-max-latest', 'qwen-vl-plus', 'qwen-vl-plus-latest',
         ):
             return InMemoryRateLimiter(
                 requests_per_second=(1200-1)/60 / llm_number,
@@ -97,7 +99,7 @@ class RateLimiterFactory:
             )
         else:
             return InMemoryRateLimiter(
-                requests_per_second=1 / llm_number,
+                requests_per_second=(60-1)/60 / llm_number,
                 check_every_n_seconds=0.1,
                 max_bucket_size=10,
             )
@@ -107,6 +109,7 @@ class RateLimiterFactory:
         model_name: str,
         llm_number: int = 1,
     ) -> InMemoryRateLimiter:
+        """如果是deepseek本身云服务，并不限速。"""
         return InMemoryRateLimiter(
             requests_per_second=(60-1)/60 / llm_number,
             check_every_n_seconds=0.1,
