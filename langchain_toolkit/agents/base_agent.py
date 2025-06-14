@@ -20,6 +20,7 @@ from collections import Counter
 
 from typing import TYPE_CHECKING, Literal, Self, cast
 if TYPE_CHECKING:
+    from langchain_core.runnables import RunnableConfig
     from langchain_core.language_models import BaseChatModel
     from langchain_core.messages import AnyMessage, SystemMessage
     from langchain_core.prompts import ChatPromptTemplate
@@ -76,6 +77,28 @@ class BaseAgent:
         self._is_need_structured_output = is_need_structured_output
         self._schema_pydantic_base_model = schema_pydantic_base_model
         self._schema_check_type = schema_check_type
+
+    # ====常见的默认统一方法。====
+    def process_state(
+        self,
+        state,
+        config: RunnableConfig,
+    ) -> dict:
+        """
+        一般MAS中，所有agent的统一的注册方法。
+
+        构建规范:
+            - 异步分离: 在这层隔离异步操作。如无必要，仅提供同步版本。
+            - 操作分离: 直接获取需要更新的状态，不在这里构建过多逻辑。
+
+        Args:
+            state (MASState): Graph中定义的state。之后添加类型标注。
+            config (RunnableConfig): runnable设计的config配置。可以不使用，但在复杂图中，可以提供更好的控制。
+
+        Returns:
+            dict: 表示更新字段的dict。
+        """
+        raise NotImplementedError("一般MAS中，所有agent的统一的注册方法。")
 
     # ====最基础方法。====
     def call_llm(
