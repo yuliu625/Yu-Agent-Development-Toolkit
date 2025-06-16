@@ -274,33 +274,6 @@ class BaseAgent:
         self._chat_prompt_template = self._chat_prompt_template.partial(**format_kwargs)
         return self
 
-    # ====功能方法。====
-    @staticmethod
-    def wrap_message_content_with_agent_name(
-        agent_name: str,
-        original_content: str,
-    ) -> str:
-        """
-        给一段字符串以html注释的方式添加身份。
-
-        简单包裹，可以根据项目具体修改其他实现。
-
-        可以使用的场景:
-            - MAS中，一个agent会与多个agent交互。以此区别HumanMessage的实际身份。
-
-        Args:
-            agent_name (str): Agent的名称。
-            original_content (str): 原始字符串。
-
-        Returns:
-            str: 包裹了html注释的字符串。
-        """
-        return (
-            f"<!--{agent_name}-start-->\n\n"
-            + original_content
-            + f"\n\n<!--{agent_name}-end-->"
-        )
-
     # ====冗余方法。====
     @staticmethod
     def get_chat_prompt_template(
