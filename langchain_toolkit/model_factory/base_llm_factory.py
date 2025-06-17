@@ -25,7 +25,7 @@ class BaseLLMFactory:
     """
     def __init__(
         self,
-        dotenv_path: str = None
+        dotenv_path: str = None,
     ):
         """
         不需要参数实现实例化的工厂。
@@ -43,7 +43,7 @@ class BaseLLMFactory:
     def get_llm(
         model_client: Literal['openai', 'google', 'anthropic', 'dashscope', 'deepseek'],
         model_name: str,
-        **kwargs,
+        model_configs: dict = None,
     ) -> ChatOpenAI:
         """
         使用strategy-pattern封装的全部的方法。
@@ -54,84 +54,84 @@ class BaseLLMFactory:
         Args:
             model_client (Literal['openai', 'google', 'anthropic', 'dashscope', 'deepseek']): 模型的供应商。
             model_name (str): 具体模型的型号。
-            **kwargs: 对于ChatOpenAI构造函数指定的kwargs。
+            model_configs (dict): 对于ChatOpenAI构造函数指定的kwargs。
 
         Returns:
             ChatOpenAI: langchain中可用于对话的LLM。
         """
         if model_client == 'openai':
-            return BaseLLMFactory.get_openai_llm(model_name=model_name, **kwargs)
+            return BaseLLMFactory.get_openai_llm(model_name=model_name, model_configs=model_configs)
         elif model_client == 'google':
-            return BaseLLMFactory.get_google_llm(model_name=model_name, **kwargs)
+            return BaseLLMFactory.get_google_llm(model_name=model_name, model_configs=model_configs)
         elif model_client == 'anthropic':
-            return BaseLLMFactory.get_anthropic_llm(model_name=model_name, **kwargs)
+            return BaseLLMFactory.get_anthropic_llm(model_name=model_name, model_configs=model_configs)
         elif model_client == 'dashscope':
-            return BaseLLMFactory.get_dashscope_llm(model_name=model_name, **kwargs)
+            return BaseLLMFactory.get_dashscope_llm(model_name=model_name, model_configs=model_configs)
         elif model_client == 'deepseek':
-            return BaseLLMFactory.get_deepseek_llm(model_name=model_name, **kwargs)
+            return BaseLLMFactory.get_deepseek_llm(model_name=model_name, model_configs=model_configs)
 
     @staticmethod
     def get_openai_llm(
         model_name: Annotated[str, "chatgpt系列模型的名字"] = 'gpt-4o-mini',
-        **kwargs,
+        model_configs: dict = None,
     ) -> ChatOpenAI:
         llm = ChatOpenAI(
             model_name=model_name,
             base_url=os.environ['OPENAI_API_BASE_URL'],
             api_key=os.environ['OPENAI_API_KEY'],
-            **kwargs,
+            **(model_configs or {}),
         )
         return llm
 
     @staticmethod
     def get_google_llm(
         model_name: Annotated[str, "gemini系列模型的名字"] = 'gemini-2.5-flash-preview-05-20',
-        **kwargs,
+        model_configs: dict = None,
     ) -> ChatOpenAI:
         llm = ChatOpenAI(
             model_name=model_name,
             base_url=os.environ['GEMINI_API_BASE_URL'],
             api_key=os.environ['GEMINI_API_KEY'],
-            **kwargs,
+            **(model_configs or {}),
         )
         return llm
 
     @staticmethod
     def get_anthropic_llm(
         model_name: Annotated[str, "claude系列模型的名字"] = 'claude-opus-4-20250514',
-        **kwargs,
+        model_configs: dict = None,
     ) -> ChatOpenAI:
         llm = ChatOpenAI(
             model_name=model_name,
             base_url=os.environ['ANTHROPIC_API_BASE_URL'],
             api_key=os.environ['ANTHROPIC_API_KEY'],
-            **kwargs,
+            **(model_configs or {}),
         )
         return llm
 
     @staticmethod
     def get_dashscope_llm(
         model_name: Annotated[str, "qwen系列模型的名字"] = 'qwen-max',
-        **kwargs,
+        model_configs: dict = None,
     ) -> ChatOpenAI:
         llm = ChatOpenAI(
             model_name=model_name,
             base_url=os.environ['DASHSCOPE_API_BASE_URL'],
             api_key=os.environ['DASHSCOPE_API_KEY'],
-            **kwargs,
+            **(model_configs or {}),
         )
         return llm
 
     @staticmethod
     def get_deepseek_llm(
         model_name: Annotated[str, "deepseek系列模型的名字"] = 'deepseek-chat',
-        **kwargs,
+        model_configs: dict = None,
     ) -> ChatOpenAI:
         llm = ChatOpenAI(
             model_name=model_name,
             base_url=os.environ['DEEPSEEK_API_BASE_URL'],
             api_key=os.environ['DEEPSEEK_API_KEY'],
-            **kwargs,
+            **(model_configs or {}),
         )
         return llm
 
