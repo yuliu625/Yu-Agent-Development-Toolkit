@@ -48,7 +48,7 @@ class RateLimiterFactory:
         llm_number: int = 1,
     ) -> InMemoryRateLimiter:
         return InMemoryRateLimiter(
-            requests_per_second=(60-1)/60 / llm_number,
+            requests_per_second=max(60/60 / llm_number, 1),
             check_every_n_seconds=0.1,
             max_bucket_size=10,
         )
@@ -58,11 +58,40 @@ class RateLimiterFactory:
         model_name: str,
         llm_number: int = 1,
     ) -> InMemoryRateLimiter:
-        return InMemoryRateLimiter(
-            requests_per_second=(60-1)/60 / llm_number,
-            check_every_n_seconds=0.1,
-            max_bucket_size=10,
-        )
+        if model_name in (
+            'gemini-2.5-pro',
+        ):
+            # tier 1
+            return InMemoryRateLimiter(
+                requests_per_second=max(150/60 / llm_number, 1),
+                check_every_n_seconds=0.1,
+                max_bucket_size=10,
+            )
+            # tier 2
+            pass
+        elif model_name in (
+            'gemini-2.5-flash',
+        ):
+            # free tier
+            # return InMemoryRateLimiter(
+            #     requests_per_second=max(10/60 / llm_number, 1),
+            #     check_every_n_seconds=0.1,
+            #     max_bucket_size=10,
+            # )
+            # tier 1
+            return InMemoryRateLimiter(
+                requests_per_second=max(1000/60 / llm_number, 1),
+                check_every_n_seconds=0.1,
+                max_bucket_size=10,
+            )
+            # tier 2
+            pass
+        else:
+            return InMemoryRateLimiter(
+                requests_per_second=max(10/60 / llm_number, 1),
+                check_every_n_seconds=0.1,
+                max_bucket_size=10,
+            )
 
     @staticmethod
     def get_anthropic_rate_limiter(
@@ -70,7 +99,7 @@ class RateLimiterFactory:
         llm_number: int = 1,
     ) -> InMemoryRateLimiter:
         return InMemoryRateLimiter(
-            requests_per_second=(60-1)/60 / llm_number,
+            requests_per_second=max(60/60 / llm_number, 1),
             check_every_n_seconds=0.1,
             max_bucket_size=10,
         )
@@ -85,7 +114,7 @@ class RateLimiterFactory:
             'qwen-vl-max', 'qwen-vl-max-latest', 'qwen-vl-plus', 'qwen-vl-plus-latest',
         ):
             return InMemoryRateLimiter(
-                requests_per_second=(1200-1)/60 / llm_number,
+                requests_per_second=max(1200/60 / llm_number, 1),
                 check_every_n_seconds=0.1,
                 max_bucket_size=10,
             )
@@ -93,13 +122,13 @@ class RateLimiterFactory:
             'qwen-plus', 'qwen-plus-latest',
         ):
             return InMemoryRateLimiter(
-                requests_per_second=(15000-1)/60 / llm_number,
+                requests_per_second=max(15000/60 / llm_number, 1),
                 check_every_n_seconds=0.1,
                 max_bucket_size=10,
             )
         else:
             return InMemoryRateLimiter(
-                requests_per_second=(60-1)/60 / llm_number,
+                requests_per_second=max(60/60 / llm_number, 1),
                 check_every_n_seconds=0.1,
                 max_bucket_size=10,
             )
@@ -111,7 +140,7 @@ class RateLimiterFactory:
     ) -> InMemoryRateLimiter:
         """如果是deepseek本身云服务，并不限速。"""
         return InMemoryRateLimiter(
-            requests_per_second=(60-1)/60 / llm_number,
+            requests_per_second=max(600/60 / llm_number, 1),
             check_every_n_seconds=0.1,
             max_bucket_size=10,
         )
