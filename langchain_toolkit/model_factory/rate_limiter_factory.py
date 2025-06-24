@@ -34,7 +34,7 @@ class RateLimiterFactory:
     # ====主要方法。====
     @staticmethod
     def get_rate_limiter(
-        model_client: Literal['openai', 'google', 'anthropic', 'dashscope', 'deepseek'],
+        model_client: Literal['openai', 'google', 'anthropic', 'dashscope', 'deepseek', 'local'],
         model_name: str,
         llm_number: int = 1,
     ) -> InMemoryRateLimiter:
@@ -48,6 +48,8 @@ class RateLimiterFactory:
             return RateLimiterFactory.get_dashscope_rate_limiter(model_name=model_name, llm_number=llm_number)
         elif model_client == 'deepseek':
             return RateLimiterFactory.get_deepseek_rate_limiter(model_name=model_name, llm_number=llm_number)
+        elif model_client == 'local':
+            return RateLimiterFactory.get_local_llm_rate_limiter(model_name=model_name, llm_number=llm_number)
 
     @staticmethod
     def get_openai_rate_limiter(
@@ -179,6 +181,20 @@ class RateLimiterFactory:
         """
         return InMemoryRateLimiter(
             requests_per_second=max(600/60 / llm_number, 1),
+            check_every_n_seconds=0.1,
+            max_bucket_size=10,
+        )
+
+    @staticmethod
+    def get_local_llm_rate_limiter(
+        model_name: str,
+        llm_number: int = 1,
+    ) -> InMemoryRateLimiter:
+        """
+        根据具体机器额外实现。
+        """
+        return InMemoryRateLimiter(
+            requests_per_second=max(60/60 / llm_number, 1),
             check_every_n_seconds=0.1,
             max_bucket_size=10,
         )
