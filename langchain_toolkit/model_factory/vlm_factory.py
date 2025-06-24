@@ -1,5 +1,10 @@
 """
 具有视觉能力的VLM的factory。
+
+未继续更新这个模块的原因:
+    - 最早构建这些方法源于，在llama-index，一些单模态和多模态的模型是有区别的。
+        而在langchain中，单模态和多模态通常统一被chat-model支持。因此没有明显的需求去构建额外的VLMFactory。
+        如果有必要，也是在BaseLLMFactory基础上额外指定参数，构建新的工厂。
 """
 
 from __future__ import annotations
