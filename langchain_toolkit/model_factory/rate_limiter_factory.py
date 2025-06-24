@@ -63,7 +63,7 @@ class RateLimiterFactory:
         # tier 1
         # tier 2
         return InMemoryRateLimiter(
-            requests_per_second=max(60/60 / llm_number, 1),
+            requests_per_second=60/60 / llm_number,
             check_every_n_seconds=0.1,
             max_bucket_size=10,
         )
@@ -83,13 +83,13 @@ class RateLimiterFactory:
             # free tier can't use gemini-2.5-pro
             # tier 1
             return InMemoryRateLimiter(
-                requests_per_second=max(150/60 / llm_number, 1),
+                requests_per_second=150/60 / llm_number,
                 check_every_n_seconds=0.1,
                 max_bucket_size=10,
             )
             # tier 2
             # return InMemoryRateLimiter(
-            #     requests_per_second=max(1000/60 / llm_number, 1),
+            #     requests_per_second=1000/60 / llm_number,
             #     check_every_n_seconds=0.1,
             #     max_bucket_size=10,
             # )
@@ -98,25 +98,25 @@ class RateLimiterFactory:
         ):
             # free tier
             # return InMemoryRateLimiter(
-            #     requests_per_second=max(10/60 / llm_number, 1),
+            #     requests_per_second=10/60 / llm_number,
             #     check_every_n_seconds=0.1,
             #     max_bucket_size=10,
             # )
             # tier 1
             return InMemoryRateLimiter(
-                requests_per_second=max(1000/60 / llm_number, 1),
+                requests_per_second=1000/60 / llm_number,
                 check_every_n_seconds=0.1,
                 max_bucket_size=10,
             )
             # tier 2
             # return InMemoryRateLimiter(
-            #     requests_per_second=max(2000/60 / llm_number, 1),
+            #     requests_per_second=2000/60 / llm_number,
             #     check_every_n_seconds=0.1,
             #     max_bucket_size=10,
             # )
         else:
             return InMemoryRateLimiter(
-                requests_per_second=max(10/60 / llm_number, 1),
+                requests_per_second=10/60 / llm_number,
                 check_every_n_seconds=0.1,
                 max_bucket_size=10,
             )
@@ -127,7 +127,7 @@ class RateLimiterFactory:
         llm_number: int = 1,
     ) -> InMemoryRateLimiter:
         return InMemoryRateLimiter(
-            requests_per_second=max(60/60 / llm_number, 1),
+            requests_per_second=60/60 / llm_number,
             check_every_n_seconds=0.1,
             max_bucket_size=10,
         )
@@ -148,7 +148,7 @@ class RateLimiterFactory:
             'qwen-vl-plus', 'qwen-vl-plus-latest',
         ):
             return InMemoryRateLimiter(
-                requests_per_second=max(1200/60 / llm_number, 1),
+                requests_per_second=1200/60 / llm_number,
                 check_every_n_seconds=0.1,
                 max_bucket_size=10,
             )
@@ -156,13 +156,13 @@ class RateLimiterFactory:
             'qwen-plus', 'qwen-plus-latest',
         ):
             return InMemoryRateLimiter(
-                requests_per_second=max(15000/60 / llm_number, 1),
+                requests_per_second=15000/60 / llm_number,
                 check_every_n_seconds=0.1,
                 max_bucket_size=10,
             )
         else:
             return InMemoryRateLimiter(
-                requests_per_second=max(60/60 / llm_number, 1),
+                requests_per_second=60/60 / llm_number,
                 check_every_n_seconds=0.1,
                 max_bucket_size=10,
             )
@@ -180,7 +180,7 @@ class RateLimiterFactory:
             - 不要因过长响应时间而判断为超时。
         """
         return InMemoryRateLimiter(
-            requests_per_second=max(600/60 / llm_number, 1),
+            requests_per_second=600/60 / llm_number,
             check_every_n_seconds=0.1,
             max_bucket_size=10,
         )
@@ -194,7 +194,7 @@ class RateLimiterFactory:
         根据具体机器额外实现。
         """
         return InMemoryRateLimiter(
-            requests_per_second=max(60/60 / llm_number, 1),
+            requests_per_second=6000/60 / llm_number,
             check_every_n_seconds=0.1,
             max_bucket_size=10,
         )
