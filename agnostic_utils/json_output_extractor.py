@@ -10,6 +10,9 @@
     - PydanticOutputParser: langchain中基于JsonOutputParser的派生类，更强大，但是对于pydantic的BaseModel的定义有限。
     - GuardrailsOutputParser: 调用LLM进行修复json，但是需要额外导入包，并且不是原本的LLM。
     - RetryWithErrorOutputParser: 重新请求，但是请求方式过于简单，不是原本的请求方法。
+
+后续可能的改进:
+    - 返回类型为Union[BaseModel, None]，如果需要获取python对象，直接以调用model_dump方法。但目前场景较复杂，未定解决方案。
 """
 
 from __future__ import annotations
@@ -38,7 +41,7 @@ class JsonOutputExtractor:
         - extract_json_from_str: 封装所有操作的方法，需要指定相关参数。
     """
 
-    # ====主要方法。====
+    # ====暴露方法。主要方法。====
     @staticmethod
     def extract_json_from_str(
         raw_str: str,
@@ -189,7 +192,9 @@ class JsonOutputExtractor:
         """
         对于已经可以加载的json数据进行字段检验。
 
-        静默检查，如果需要转换由外部工具实现。
+        静默检查，如果需要转换由外部工具实现。原因在于:
+            - 暴露方法通用性。该工具类暴露的方法并不限制dict或list，如果获取的数据类，获取结果会需要额外不同外部逻辑。
+            - 返回类型。返回类型只能标注为 BaseModel | None ，同样需要cast或者assert。
 
         默认使用pydantic，原因在于：
             - 实际的严格检验。
