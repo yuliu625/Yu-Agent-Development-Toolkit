@@ -2,7 +2,7 @@
 根据请求数量和时间的速率限制器。
 
 文档来源:
-    - openai: https://platform.openai.com/docs/guides/rate-limits
+    - openai: https://platform.openai.com/docs/guides/rate-limits https://platform.openai.com/docs/models
     - google: https://ai.google.dev/gemini-api/docs/rate-limits
     - anthropic: https://docs.anthropic.com/en/api/rate-limits
     - dashscope: https://help.aliyun.com/zh/model-studio/rate-limit
@@ -22,8 +22,15 @@ from typing import TYPE_CHECKING, Literal
 class RateLimiterFactory:
     """
     以strategy-pattern封装的速率限制器。
-    """
 
+    参数:
+        - model_client, model_name: 同llm-factory系列。
+        - llm_number: 同时使用相关llm的数量。
+            - 简单实现: 每个llm有独立的rate-limiter。
+                更加严格，保证不会出错。
+            - 改进: 不指定该参数。同一系列llm共享同一个rate-limiter，需要高层实现额外相关资源分配。
+                更加高效灵活利用资源，尤其适用限制高的低速场景。
+    """
     # ====主要方法。====
     @staticmethod
     def get_rate_limiter(
@@ -47,6 +54,12 @@ class RateLimiterFactory:
         model_name: str,
         llm_number: int = 1,
     ) -> InMemoryRateLimiter:
+        """
+        OpenAI对于不同付费等级有不同限速，需要具体选择。
+        """
+        # free tier
+        # tier 1
+        # tier 2
         return InMemoryRateLimiter(
             requests_per_second=max(60/60 / llm_number, 1),
             check_every_n_seconds=0.1,
@@ -58,9 +71,14 @@ class RateLimiterFactory:
         model_name: str,
         llm_number: int = 1,
     ) -> InMemoryRateLimiter:
+        """
+        Google云服务对于不同付费等级有不同限速，需要具体选择。
+        """
         if model_name in (
             'gemini-2.5-pro',
         ):
+            # free tier
+            # free tier can't use gemini-2.5-pro
             # tier 1
             return InMemoryRateLimiter(
                 requests_per_second=max(150/60 / llm_number, 1),
@@ -68,7 +86,11 @@ class RateLimiterFactory:
                 max_bucket_size=10,
             )
             # tier 2
-            pass
+            # return InMemoryRateLimiter(
+            #     requests_per_second=max(1000/60 / llm_number, 1),
+            #     check_every_n_seconds=0.1,
+            #     max_bucket_size=10,
+            # )
         elif model_name in (
             'gemini-2.5-flash',
         ):
@@ -85,7 +107,11 @@ class RateLimiterFactory:
                 max_bucket_size=10,
             )
             # tier 2
-            pass
+            # return InMemoryRateLimiter(
+            #     requests_per_second=max(2000/60 / llm_number, 1),
+            #     check_every_n_seconds=0.1,
+            #     max_bucket_size=10,
+            # )
         else:
             return InMemoryRateLimiter(
                 requests_per_second=max(10/60 / llm_number, 1),
@@ -109,9 +135,15 @@ class RateLimiterFactory:
         model_name: str,
         llm_number: int = 1,
     ) -> InMemoryRateLimiter:
+        """
+        阿里云模型有多种架构和多个checkpoint，根据具体情况选择和更新。
+        """
         if model_name in (
-            'qwen-max', 'qwen-max-latest', 'qwen-turbo', 'qwen-turbo-latest', 'qwen-long', 'qwen-long-latest',
-            'qwen-vl-max', 'qwen-vl-max-latest', 'qwen-vl-plus', 'qwen-vl-plus-latest',
+            'qwen-max', 'qwen-max-latest',
+            'qwen-turbo', 'qwen-turbo-latest',
+            'qwen-long', 'qwen-long-latest',
+            'qwen-vl-max', 'qwen-vl-max-latest',
+            'qwen-vl-plus', 'qwen-vl-plus-latest',
         ):
             return InMemoryRateLimiter(
                 requests_per_second=max(1200/60 / llm_number, 1),
@@ -138,7 +170,13 @@ class RateLimiterFactory:
         model_name: str,
         llm_number: int = 1,
     ) -> InMemoryRateLimiter:
-        """如果是deepseek本身云服务，并不限速。"""
+        """
+        如果是deepseek本身云服务，并不限速。
+
+        仅注意:
+            - 不要到达请求发送机器的最大上限。
+            - 不要因过长响应时间而判断为超时。
+        """
         return InMemoryRateLimiter(
             requests_per_second=max(600/60 / llm_number, 1),
             check_every_n_seconds=0.1,
