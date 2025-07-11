@@ -196,7 +196,7 @@ class JsonOutputExtractor:
             - 暴露方法通用性。该工具类暴露的方法并不限制dict或list，如果获取的数据类，获取结果会需要额外不同外部逻辑。
             - 返回类型。返回类型只能标注为 BaseModel | None ，同样需要cast或者assert。
 
-        默认使用pydantic，原因在于：
+        默认使用pydantic，原因在于:
             - 实际的严格检验。
             - 可以处理number和bool数据的自动转换，会很方便。
 
