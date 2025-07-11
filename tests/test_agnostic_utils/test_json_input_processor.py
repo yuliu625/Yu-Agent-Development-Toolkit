@@ -2,9 +2,13 @@
 测试JsonInputProcessor的运行情况。
 """
 
+from __future__ import annotations
 import pytest
 
 from agnostic_utils.json_input_processor import JsonInputProcessor
+from typing import TYPE_CHECKING
+# if TYPE_CHECKING:
+
 
 _test_put_in_markdown_cases = [
     ([1, 2, 3], "```json\n[1, 2, 3]\n```"),
