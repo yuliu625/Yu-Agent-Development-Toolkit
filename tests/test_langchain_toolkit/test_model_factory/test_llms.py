@@ -13,7 +13,7 @@ LLM的测试工程。
 from __future__ import annotations
 import pytest
 
-from langchain_toolkit.model_factory.base_llm_factory import BaseLLMFactory
+from langchain_toolkit.model_factory.specific_llm_factory import SpecificLLMFactory
 
 from langchain_core.messages import AIMessage
 
@@ -23,7 +23,7 @@ from typing import TYPE_CHECKING
 _text_message_1 = "你的版本型号是什么？"
 
 
-class TestBaseLLMs:
+class TestLLMs:
     """
     根据具体项目需求设置每个测试函数的参数。
     """
@@ -32,7 +32,7 @@ class TestBaseLLMs:
             ('gpt-4o-mini', _text_message_1),
         ])
     def test_openai_llm(self, model_name, message):
-        llm = BaseLLMFactory.get_openai_llm(model_name=model_name)
+        llm = SpecificLLMFactory.get_openai_llm(model_name=model_name)
         response = llm.invoke(message)
         print(response)
         assert isinstance(response, AIMessage)
@@ -42,7 +42,7 @@ class TestBaseLLMs:
             ('gemini-2.5-flash', _text_message_1),
         ])
     def test_google_llm(self, model_name, message):
-        llm = BaseLLMFactory.get_google_llm(model_name=model_name)
+        llm = SpecificLLMFactory.get_google_llm(model_name=model_name)
         response = llm.invoke(message)
         print(response)
         assert isinstance(response, AIMessage)
@@ -52,7 +52,7 @@ class TestBaseLLMs:
             ('claude-opus-4', _text_message_1),
         ])
     def test_anthropic_llm(self, model_name, message):
-        llm = BaseLLMFactory.get_anthropic_llm(model_name=model_name)
+        llm = SpecificLLMFactory.get_anthropic_llm(model_name=model_name)
         response = llm.invoke(message)
         print(response)
         assert isinstance(response, AIMessage)
@@ -62,7 +62,7 @@ class TestBaseLLMs:
             ('qwen-plus', _text_message_1),
         ])
     def test_dashscope_llm(self, model_name, message):
-        llm = BaseLLMFactory.get_dashscope_llm(model_name=model_name)
+        llm = SpecificLLMFactory.get_dashscope_llm(model_name=model_name)
         response = llm.invoke(message)
         print(response)
         assert isinstance(response, AIMessage)
@@ -72,7 +72,18 @@ class TestBaseLLMs:
             ('deepseek-chat', _text_message_1),
         ])
     def test_deepseek_llm(self, model_name, message):
-        llm = BaseLLMFactory.get_deepseek_llm(model_name=model_name)
+        llm = SpecificLLMFactory.get_deepseek_llm(model_name=model_name)
+        response = llm.invoke(message)
+        print(response)
+        assert isinstance(response, AIMessage)
+
+    @pytest.mark.parametrize(
+        'model_name, message', [
+            ('qwen2.5:7b', _text_message_1),
+        ]
+    )
+    def test_deepseek_llm(self, model_name, message):
+        llm = SpecificLLMFactory.get_ollama_llm(model_name=model_name)
         response = llm.invoke(message)
         print(response)
         assert isinstance(response, AIMessage)
