@@ -8,6 +8,10 @@
 ```shell
 pip install -U langchain-openai
 ```
+
+如果需要:
+    - 使用具体厂商的一些功能: 使用SpecificLLMFactory。
+    - 使用本地模型: 使用SpecificLLMFactory，以及参考LocalLLMFactory具体去实现。
 """
 
 from __future__ import annotations
@@ -16,7 +20,7 @@ from langchain_openai import ChatOpenAI
 import os
 from dotenv import load_dotenv
 
-from typing import Literal, Annotated
+from typing import Literal
 
 
 class BaseLLMFactory:
@@ -54,7 +58,7 @@ class BaseLLMFactory:
         Args:
             model_client (Literal['openai', 'google', 'anthropic', 'dashscope', 'deepseek']): 模型的供应商。
             model_name (str): 具体模型的型号。
-            model_configs (dict): 对于ChatOpenAI构造函数指定的kwargs。
+            model_configs (dict, optional): 对于ChatOpenAI构造函数指定的kwargs。
 
         Returns:
             ChatOpenAI: langchain中可用于对话的LLM。
@@ -72,7 +76,7 @@ class BaseLLMFactory:
 
     @staticmethod
     def get_openai_llm(
-        model_name: Annotated[str, "chatgpt系列模型的名字"] = 'gpt-4o-mini',
+        model_name: str,
         model_configs: dict = None,
     ) -> ChatOpenAI:
         llm = ChatOpenAI(
@@ -85,7 +89,7 @@ class BaseLLMFactory:
 
     @staticmethod
     def get_google_llm(
-        model_name: Annotated[str, "gemini系列模型的名字"] = 'gemini-2.5-flash-preview-05-20',
+        model_name: str,
         model_configs: dict = None,
     ) -> ChatOpenAI:
         llm = ChatOpenAI(
@@ -98,7 +102,7 @@ class BaseLLMFactory:
 
     @staticmethod
     def get_anthropic_llm(
-        model_name: Annotated[str, "claude系列模型的名字"] = 'claude-opus-4-20250514',
+        model_name: str,
         model_configs: dict = None,
     ) -> ChatOpenAI:
         llm = ChatOpenAI(
@@ -111,7 +115,7 @@ class BaseLLMFactory:
 
     @staticmethod
     def get_dashscope_llm(
-        model_name: Annotated[str, "qwen系列模型的名字"] = 'qwen-max',
+        model_name: str,
         model_configs: dict = None,
     ) -> ChatOpenAI:
         llm = ChatOpenAI(
@@ -124,7 +128,7 @@ class BaseLLMFactory:
 
     @staticmethod
     def get_deepseek_llm(
-        model_name: Annotated[str, "deepseek系列模型的名字"] = 'deepseek-chat',
+        model_name: str,
         model_configs: dict = None,
     ) -> ChatOpenAI:
         llm = ChatOpenAI(
