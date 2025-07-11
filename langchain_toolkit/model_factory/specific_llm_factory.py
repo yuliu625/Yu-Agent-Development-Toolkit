@@ -7,12 +7,12 @@ from __future__ import annotations
 import os
 from dotenv import load_dotenv
 
-from typing import TYPE_CHECKING, Annotated, Literal
+from typing import TYPE_CHECKING, Literal
 if TYPE_CHECKING:
     from langchain_core.language_models import BaseChatModel
 
 
-class LLMFactory:
+class SpecificLLMFactory:
     """
     默认的全部以openai兼容API实现的LLM-factory。
     """
@@ -34,7 +34,7 @@ class LLMFactory:
     # ====主要方法。====
     @staticmethod
     def get_llm(
-        model_client: Literal['openai', 'google', 'anthropic', 'dashscope', 'deepseek'],
+        model_client: Literal['openai', 'google', 'anthropic', 'dashscope', 'deepseek', 'ollama'],
         model_name: str,
         model_configs: dict = None,
     ) -> BaseChatModel:
@@ -45,27 +45,29 @@ class LLMFactory:
         可以直接使用该工具类中其他方法。
 
         Args:
-            model_client (Literal['openai', 'google', 'anthropic', 'dashscope', 'deepseek']): 模型的供应商。
+            model_client (Literal['openai', 'google', 'anthropic', 'dashscope', 'deepseek', 'ollama']): 模型的供应商。
             model_name (str): 具体模型的型号。
-            model_configs (dict): 对于ChatOpenAI构造函数指定的kwargs。
+            model_configs (dict, optional): 对于ChatOpenAI构造函数指定的kwargs。
 
         Returns:
             BaseChatModel: langchain中可用于对话的LLM。
         """
         if model_client == 'openai':
-            return LLMFactory.get_openai_llm(model_name=model_name, model_configs=model_configs)
+            return SpecificLLMFactory.get_openai_llm(model_name=model_name, model_configs=model_configs)
         elif model_client == 'google':
-            return LLMFactory.get_google_llm(model_name=model_name, model_configs=model_configs)
+            return SpecificLLMFactory.get_google_llm(model_name=model_name, model_configs=model_configs)
         elif model_client == 'anthropic':
-            return LLMFactory.get_anthropic_llm(model_name=model_name, model_configs=model_configs)
+            return SpecificLLMFactory.get_anthropic_llm(model_name=model_name, model_configs=model_configs)
         elif model_client == 'dashscope':
-            return LLMFactory.get_dashscope_llm(model_name=model_name, model_configs=model_configs)
+            return SpecificLLMFactory.get_dashscope_llm(model_name=model_name, model_configs=model_configs)
         elif model_client == 'deepseek':
-            return LLMFactory.get_deepseek_llm(model_name=model_name, model_configs=model_configs)
+            return SpecificLLMFactory.get_deepseek_llm(model_name=model_name, model_configs=model_configs)
+        elif model_client == 'ollama':
+            return SpecificLLMFactory.get_ollama_llm(model_name=model_name, model_configs=model_configs)
 
     @staticmethod
     def get_openai_llm(
-        model_name: Annotated[str, "chatgpt系列模型的名字"] = 'gpt-4o-mini',
+        model_name: str,
         model_configs: dict = None,
     ) -> BaseChatModel:
         from langchain_openai import ChatOpenAI
@@ -79,13 +81,13 @@ class LLMFactory:
 
     @staticmethod
     def get_google_llm(
-        model_name: Annotated[str, "gemini系列模型的名字"] = 'gemini-2.5-flash-preview-05-20',
+        model_name: str,
         model_configs: dict = None,
     ) -> BaseChatModel:
         from langchain_google_genai import ChatGoogleGenerativeAI
         llm = ChatGoogleGenerativeAI(
-            model_name=model_name,
-            base_url=os.environ['GEMINI_API_BASE_URL'],
+            model=model_name,  # google这个kwarg只能指定为model。
+            # base_url=os.environ['GEMINI_API_BASE_URL'],  # google这个kwarg不需要指定。
             api_key=os.environ['GEMINI_API_KEY'],
             **(model_configs or {}),
         )
@@ -93,7 +95,7 @@ class LLMFactory:
 
     @staticmethod
     def get_anthropic_llm(
-        model_name: Annotated[str, "claude系列模型的名字"] = 'claude-opus-4-20250514',
+        model_name: str,
         model_configs: dict = None,
     ) -> BaseChatModel:
         from langchain_anthropic import ChatAnthropic
@@ -107,7 +109,7 @@ class LLMFactory:
 
     @staticmethod
     def get_dashscope_llm(
-        model_name: Annotated[str, "qwen系列模型的名字"] = 'qwen-max',
+        model_name: str,
         model_configs: dict = None,
     ) -> BaseChatModel:
         from langchain_community.chat_models.tongyi import ChatTongyi
@@ -121,7 +123,7 @@ class LLMFactory:
 
     @staticmethod
     def get_deepseek_llm(
-        model_name: Annotated[str, "deepseek系列模型的名字"] = 'deepseek-chat',
+        model_name: str,
         model_configs: dict = None,
     ) -> BaseChatModel:
         from langchain_deepseek import ChatDeepSeek
@@ -129,6 +131,38 @@ class LLMFactory:
             model_name=model_name,
             api_base=os.environ['DEEPSEEK_API_BASE_URL'],
             api_key=os.environ['DEEPSEEK_API_KEY'],
+            **(model_configs or {}),
+        )
+        return llm
+
+    @staticmethod
+    def get_ollama_llm(
+        model_name: str,
+        model_configs: dict = None,
+    ) -> BaseChatModel:
+        """
+        使用ollama本地运行模型。
+
+        最简单的方法，几乎没有迁移成本，并且支持的模型很多。
+
+        注意:
+            - model_name的命名风格与远程client不同。
+。
+        ollama可以自行管理:
+            - 自启动和关闭模型。
+            - 多client并保持线程安全。
+
+        Args:
+            model_name (str): 具体的模型。
+                实际为Literal，在 https://ollama.com/ 查看。有命名空间，需要区别checkpoint等。
+            model_configs (dict, optional): 对于ChatOllama构造指定的kwargs。
+
+        Returns:
+            BaseChatModel: langchain中可用于对话的LLM。
+        """
+        from langchain_ollama import ChatOllama
+        llm = ChatOllama(
+            model=model_name,
             **(model_configs or {}),
         )
         return llm
