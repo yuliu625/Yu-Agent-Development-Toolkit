@@ -23,7 +23,7 @@ from typing import TYPE_CHECKING
 _text_message_1 = "你的版本型号是什么？"
 
 
-class TestLLMs:
+class TestSpecificLLMs:
     """
     根据具体项目需求设置每个测试函数的参数。
     """
