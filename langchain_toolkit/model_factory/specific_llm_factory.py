@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 class SpecificLLMFactory:
     """
-    默认的全部以openai兼容API实现的LLM-factory。
+    以每个模型提供商的具体方法实现的LLM-factory。
     """
     def __init__(
         self,
