@@ -13,7 +13,9 @@ from langchain_openai import ChatOpenAI
 import os
 from dotenv import load_dotenv
 
-from typing import Annotated
+from typing import TYPE_CHECKING, Annotated
+if TYPE_CHECKING:
+    from langchain_core.language_models import BaseChatModel
 
 
 class VLMFactory:
@@ -36,7 +38,7 @@ class VLMFactory:
     def get_dashscope_vlm(
         model_name: Annotated[str, "qwen系列模型的名字"] = 'qwen-vl-max-latest',
         model_configs: dict = None,
-    ):
+    ) -> BaseChatModel:
         """
         获得qwen的VLM。
         由于现有的各种agent-framework对于VLM不完全支持，这里专门去使用。
