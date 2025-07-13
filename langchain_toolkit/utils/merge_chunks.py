@@ -1,5 +1,5 @@
 """
-将流式传输的数据进行处理。
+流式响应的结果处理方法。
 """
 
 from __future__ import annotations
@@ -37,7 +37,7 @@ def merge_chunks_into_message(
             没有类型指定，会还原为BaseMessage。可以使用isinstance或者cast方法。
     """
     message = message_chunk_to_message(
-        chunk=sum(chunks, chunks[0]),  # 直接使用sum方法，简化合并chunk操作。Base
+        chunk=sum(chunks, chunks[0]),  # 直接使用sum方法，简化合并chunk操作。BaseMessageChunk实现了 '+' 运算符。
     )
     return message
 
