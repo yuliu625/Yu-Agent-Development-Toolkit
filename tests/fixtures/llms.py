@@ -13,6 +13,6 @@ from typing import TYPE_CHECKING
 
 @pytest.fixture
 def qwen_plus():
-    qwen_plus = BaseLLMFactory().get_dashscope_llm('qwen-plus')
+    qwen_plus = BaseLLMFactory().create_dashscope_llm('qwen-plus')
     return qwen_plus
 
