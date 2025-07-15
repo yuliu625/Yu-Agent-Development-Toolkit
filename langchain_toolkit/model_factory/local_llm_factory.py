@@ -31,7 +31,7 @@ class LocalLLMFactory:
 
     # ====常用方法。====
     @staticmethod
-    def get_ollama_llm(
+    def create_ollama_llm(
         model_name: str,
         model_configs: dict = None,
     ) -> BaseChatModel:
@@ -63,7 +63,7 @@ class LocalLLMFactory:
 
     # ====预留的方法。但最好以新构建一个类来实现。====
     @staticmethod
-    def get_local_llm_by_url(
+    def create_local_llm_by_url(
         base_url: str,
         model_name: str,
         model_configs: dict = None,
@@ -94,7 +94,7 @@ class LocalLLMFactory:
 
     # ====预留的方法。但不是最好的实践。====
     @staticmethod
-    def get_huggingface_llm(
+    def create_huggingface_llm(
         *args, **kwargs,
     ) -> BaseChatModel:
         """不是一个很好的做法。根据具体情况去实现。"""
