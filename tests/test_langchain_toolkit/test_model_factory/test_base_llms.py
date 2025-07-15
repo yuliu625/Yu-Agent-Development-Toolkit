@@ -32,7 +32,7 @@ class TestBaseLLMs:
             ('gpt-4o-mini', _text_message_1),
         ])
     def test_openai_llm(self, model_name, message):
-        llm = BaseLLMFactory.get_openai_llm(model_name=model_name)
+        llm = BaseLLMFactory.create_openai_llm(model_name=model_name)
         response = llm.invoke(message)
         print(response)
         assert isinstance(response, AIMessage)
@@ -42,7 +42,7 @@ class TestBaseLLMs:
             ('gemini-2.5-flash', _text_message_1),
         ])
     def test_google_llm(self, model_name, message):
-        llm = BaseLLMFactory.get_google_llm(model_name=model_name)
+        llm = BaseLLMFactory.create_google_llm(model_name=model_name)
         response = llm.invoke(message)
         print(response)
         assert isinstance(response, AIMessage)
@@ -52,7 +52,7 @@ class TestBaseLLMs:
             ('claude-opus-4', _text_message_1),
         ])
     def test_anthropic_llm(self, model_name, message):
-        llm = BaseLLMFactory.get_anthropic_llm(model_name=model_name)
+        llm = BaseLLMFactory.create_anthropic_llm(model_name=model_name)
         response = llm.invoke(message)
         print(response)
         assert isinstance(response, AIMessage)
@@ -62,7 +62,7 @@ class TestBaseLLMs:
             ('qwen-plus', _text_message_1),
         ])
     def test_dashscope_llm(self, model_name, message):
-        llm = BaseLLMFactory.get_dashscope_llm(model_name=model_name)
+        llm = BaseLLMFactory.create_dashscope_llm(model_name=model_name)
         response = llm.invoke(message)
         print(response)
         assert isinstance(response, AIMessage)
@@ -72,7 +72,7 @@ class TestBaseLLMs:
             ('deepseek-chat', _text_message_1),
         ])
     def test_deepseek_llm(self, model_name, message):
-        llm = BaseLLMFactory.get_deepseek_llm(model_name=model_name)
+        llm = BaseLLMFactory.create_deepseek_llm(model_name=model_name)
         response = llm.invoke(message)
         print(response)
         assert isinstance(response, AIMessage)
