@@ -33,26 +33,26 @@ class RateLimiterFactory:
     """
     # ====主要方法。====
     @staticmethod
-    def get_rate_limiter(
+    def create_rate_limiter(
         model_client: Literal['openai', 'google', 'anthropic', 'dashscope', 'deepseek', 'local'],
         model_name: str,
         llm_number: int = 1,
     ) -> InMemoryRateLimiter:
         if model_client == 'openai':
-            return RateLimiterFactory.get_openai_rate_limiter(model_name=model_name, llm_number=llm_number)
+            return RateLimiterFactory.create_openai_rate_limiter(model_name=model_name, llm_number=llm_number)
         elif model_client == 'google':
-            return RateLimiterFactory.get_google_rate_limiter(model_name=model_name, llm_number=llm_number)
+            return RateLimiterFactory.create_google_rate_limiter(model_name=model_name, llm_number=llm_number)
         elif model_client == 'anthropic':
-            return RateLimiterFactory.get_anthropic_rate_limiter(model_name=model_name, llm_number=llm_number)
+            return RateLimiterFactory.create_anthropic_rate_limiter(model_name=model_name, llm_number=llm_number)
         elif model_client == 'dashscope':
-            return RateLimiterFactory.get_dashscope_rate_limiter(model_name=model_name, llm_number=llm_number)
+            return RateLimiterFactory.create_dashscope_rate_limiter(model_name=model_name, llm_number=llm_number)
         elif model_client == 'deepseek':
-            return RateLimiterFactory.get_deepseek_rate_limiter(model_name=model_name, llm_number=llm_number)
+            return RateLimiterFactory.create_deepseek_rate_limiter(model_name=model_name, llm_number=llm_number)
         elif model_client == 'local':
-            return RateLimiterFactory.get_local_llm_rate_limiter(model_name=model_name, llm_number=llm_number)
+            return RateLimiterFactory.create_local_llm_rate_limiter(model_name=model_name, llm_number=llm_number)
 
     @staticmethod
-    def get_openai_rate_limiter(
+    def create_openai_rate_limiter(
         model_name: str,
         llm_number: int = 1,
     ) -> InMemoryRateLimiter:
@@ -69,7 +69,7 @@ class RateLimiterFactory:
         )
 
     @staticmethod
-    def get_google_rate_limiter(
+    def create_google_rate_limiter(
         model_name: str,
         llm_number: int = 1,
     ) -> InMemoryRateLimiter:
@@ -122,7 +122,7 @@ class RateLimiterFactory:
             )
 
     @staticmethod
-    def get_anthropic_rate_limiter(
+    def create_anthropic_rate_limiter(
         model_name: str,
         llm_number: int = 1,
     ) -> InMemoryRateLimiter:
@@ -133,7 +133,7 @@ class RateLimiterFactory:
         )
 
     @staticmethod
-    def get_dashscope_rate_limiter(
+    def create_dashscope_rate_limiter(
         model_name: str,
         llm_number: int = 1,
     ) -> InMemoryRateLimiter:
@@ -168,7 +168,7 @@ class RateLimiterFactory:
             )
 
     @staticmethod
-    def get_deepseek_rate_limiter(
+    def create_deepseek_rate_limiter(
         model_name: str,
         llm_number: int = 1,
     ) -> InMemoryRateLimiter:
@@ -186,7 +186,7 @@ class RateLimiterFactory:
         )
 
     @staticmethod
-    def get_local_llm_rate_limiter(
+    def create_local_llm_rate_limiter(
         model_name: str,
         llm_number: int = 1,
     ) -> InMemoryRateLimiter:
