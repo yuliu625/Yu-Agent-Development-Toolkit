@@ -16,24 +16,9 @@ class SpecificLLMFactory:
     """
     以每个模型提供商的具体方法实现的LLM-factory。
     """
-    def __init__(
-        self,
-        dotenv_path: str = None,
-    ):
-        """
-        不需要参数实现实例化的工厂。
-
-        指定dotenv_path仅为项目相关的情况，例如使用项目的API_KEY。
-        这些初始化操作可以更大的项目中删除并自行管理环境变量的导入。
-
-        Args:
-            dotenv_path: (str), .env文件的路径。不指定会自行寻找。
-        """
-        load_dotenv(dotenv_path=dotenv_path, override=True)
-
     # ====主要方法。====
     @staticmethod
-    def get_llm(
+    def create_llm(
         model_client: Literal['openai', 'google', 'anthropic', 'dashscope', 'deepseek', 'ollama'],
         model_name: str,
         model_configs: dict = None,
@@ -53,20 +38,20 @@ class SpecificLLMFactory:
             BaseChatModel: langchain中可用于对话的LLM。
         """
         if model_client == 'openai':
-            return SpecificLLMFactory.get_openai_llm(model_name=model_name, model_configs=model_configs)
+            return SpecificLLMFactory.create_openai_llm(model_name=model_name, model_configs=model_configs)
         elif model_client == 'google':
-            return SpecificLLMFactory.get_google_llm(model_name=model_name, model_configs=model_configs)
+            return SpecificLLMFactory.create_google_llm(model_name=model_name, model_configs=model_configs)
         elif model_client == 'anthropic':
-            return SpecificLLMFactory.get_anthropic_llm(model_name=model_name, model_configs=model_configs)
+            return SpecificLLMFactory.create_anthropic_llm(model_name=model_name, model_configs=model_configs)
         elif model_client == 'dashscope':
-            return SpecificLLMFactory.get_dashscope_llm(model_name=model_name, model_configs=model_configs)
+            return SpecificLLMFactory.create_dashscope_llm(model_name=model_name, model_configs=model_configs)
         elif model_client == 'deepseek':
-            return SpecificLLMFactory.get_deepseek_llm(model_name=model_name, model_configs=model_configs)
+            return SpecificLLMFactory.create_deepseek_llm(model_name=model_name, model_configs=model_configs)
         elif model_client == 'ollama':
-            return SpecificLLMFactory.get_ollama_llm(model_name=model_name, model_configs=model_configs)
+            return SpecificLLMFactory.create_ollama_llm(model_name=model_name, model_configs=model_configs)
 
     @staticmethod
-    def get_openai_llm(
+    def create_openai_llm(
         model_name: str,
         model_configs: dict = None,
     ) -> BaseChatModel:
@@ -80,7 +65,7 @@ class SpecificLLMFactory:
         return llm
 
     @staticmethod
-    def get_google_llm(
+    def create_google_llm(
         model_name: str,
         model_configs: dict = None,
     ) -> BaseChatModel:
@@ -94,7 +79,7 @@ class SpecificLLMFactory:
         return llm
 
     @staticmethod
-    def get_anthropic_llm(
+    def create_anthropic_llm(
         model_name: str,
         model_configs: dict = None,
     ) -> BaseChatModel:
@@ -108,7 +93,7 @@ class SpecificLLMFactory:
         return llm
 
     @staticmethod
-    def get_dashscope_llm(
+    def create_dashscope_llm(
         model_name: str,
         model_configs: dict = None,
     ) -> BaseChatModel:
@@ -122,7 +107,7 @@ class SpecificLLMFactory:
         return llm
 
     @staticmethod
-    def get_deepseek_llm(
+    def create_deepseek_llm(
         model_name: str,
         model_configs: dict = None,
     ) -> BaseChatModel:
@@ -136,7 +121,7 @@ class SpecificLLMFactory:
         return llm
 
     @staticmethod
-    def get_ollama_llm(
+    def create_ollama_llm(
         model_name: str,
         model_configs: dict = None,
     ) -> BaseChatModel:
