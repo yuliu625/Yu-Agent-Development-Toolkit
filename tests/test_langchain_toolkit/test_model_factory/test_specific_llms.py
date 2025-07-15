@@ -32,7 +32,7 @@ class TestSpecificLLMs:
             ('gpt-4o-mini', _text_message_1),
         ])
     def test_openai_llm(self, model_name, message):
-        llm = SpecificLLMFactory.get_openai_llm(model_name=model_name)
+        llm = SpecificLLMFactory.create_openai_llm(model_name=model_name)
         response = llm.invoke(message)
         print(response)
         assert isinstance(response, AIMessage)
@@ -42,7 +42,7 @@ class TestSpecificLLMs:
             ('gemini-2.5-flash', _text_message_1),
         ])
     def test_google_llm(self, model_name, message):
-        llm = SpecificLLMFactory.get_google_llm(model_name=model_name)
+        llm = SpecificLLMFactory.create_google_llm(model_name=model_name)
         response = llm.invoke(message)
         print(response)
         assert isinstance(response, AIMessage)
@@ -52,7 +52,7 @@ class TestSpecificLLMs:
             ('claude-opus-4', _text_message_1),
         ])
     def test_anthropic_llm(self, model_name, message):
-        llm = SpecificLLMFactory.get_anthropic_llm(model_name=model_name)
+        llm = SpecificLLMFactory.create_anthropic_llm(model_name=model_name)
         response = llm.invoke(message)
         print(response)
         assert isinstance(response, AIMessage)
@@ -62,7 +62,7 @@ class TestSpecificLLMs:
             ('qwen-plus', _text_message_1),
         ])
     def test_dashscope_llm(self, model_name, message):
-        llm = SpecificLLMFactory.get_dashscope_llm(model_name=model_name)
+        llm = SpecificLLMFactory.create_dashscope_llm(model_name=model_name)
         response = llm.invoke(message)
         print(response)
         assert isinstance(response, AIMessage)
@@ -72,7 +72,7 @@ class TestSpecificLLMs:
             ('deepseek-chat', _text_message_1),
         ])
     def test_deepseek_llm(self, model_name, message):
-        llm = SpecificLLMFactory.get_deepseek_llm(model_name=model_name)
+        llm = SpecificLLMFactory.create_deepseek_llm(model_name=model_name)
         response = llm.invoke(message)
         print(response)
         assert isinstance(response, AIMessage)
@@ -83,7 +83,7 @@ class TestSpecificLLMs:
         ]
     )
     def test_deepseek_llm(self, model_name, message):
-        llm = SpecificLLMFactory.get_ollama_llm(model_name=model_name)
+        llm = SpecificLLMFactory.create_ollama_llm(model_name=model_name)
         response = llm.invoke(message)
         print(response)
         assert isinstance(response, AIMessage)
