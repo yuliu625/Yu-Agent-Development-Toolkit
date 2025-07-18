@@ -105,18 +105,19 @@ class ModelConfigsBuilder:
         model_configs_ = model_configs.copy()
         # 根据每个client的情况添加参数。
         if model_client == 'openai':
-            raise NotImplementedError
+            model_configs_.setdefault('reasoning_effort', 'medium')  # 设置思考强度。默认思考强度为中等。
         elif model_client == 'google':
-            raise NotImplementedError
+            pass
+            # model_configs_.setdefault('thinking_budget', -1)  # 启用思考，默认开启动态方式思维。这个不设置也可以。
         elif model_client == 'anthropic':
-            raise NotImplementedError
+            model_configs_.setdefault('thinking', dict(type='enabled', budget_tokens=2000))
         elif model_client == 'dashscope':
             model_configs_.setdefault('streaming', True)  # qwen系列思考模式只能流式传输。
             model_configs_['model_kwargs'].setdefault('enable_thinking', True)  # 具体需要设置的参数，开始思考模式。
-            return model_configs_
         elif model_client == 'deepseek':
-            # deepseek的reasoning模式不可设置，只有一种模式。
-            return model_configs_
+            pass  # deepseek的reasoning模式不可设置，只有一种模式。
         elif model_client == 'ollama':
-            raise NotImplementedError
+            model_configs_.setdefault('reasoning', True)
+        # 统一返回修改过后的配置。
+        return model_configs_
 
