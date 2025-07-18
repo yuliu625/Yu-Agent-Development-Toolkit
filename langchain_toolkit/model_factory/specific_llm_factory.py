@@ -74,6 +74,7 @@ class SpecificLLMFactory:
             model=model_name,  # google这个kwarg只能指定为model。
             # base_url=os.environ['GEMINI_API_BASE_URL'],  # google这个kwarg不需要指定。
             api_key=os.environ['GEMINI_API_KEY'],
+            transport='rest',  # 需要指定服务通信的网络协议为RESTful HTTP API，否则默认的grpc在使用代理服务时总是有问题。
             **(model_configs or {}),
         )
         return llm
