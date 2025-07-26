@@ -107,7 +107,7 @@ class ModelConfigsBuilder:
         if model_client == 'openai':
             model_configs_.setdefault('reasoning_effort', 'medium')  # 设置思考强度。默认思考强度为中等。
         elif model_client == 'google':
-            pass
+            model_configs_.setdefault('include_thought', True)  # gemini的特殊性，这个一定要设置并额外解析。
             # model_configs_.setdefault('thinking_budget', -1)  # 启用思考，默认开启动态方式思维。这个不设置也可以。
         elif model_client == 'anthropic':
             model_configs_.setdefault('thinking', dict(type='enabled', budget_tokens=2000))
