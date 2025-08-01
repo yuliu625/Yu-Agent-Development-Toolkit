@@ -61,12 +61,32 @@ class RateLimiterFactory:
         """
         # free tier
         # tier 1
+        if model_name.startswith((
+            'gpt-3.5-turbo',
+            'gpt-4',
+            'gpt-4.1',
+            'gpt-4o'
+        )):
+            return InMemoryRateLimiter(
+                requests_per_second=500/60 / llm_number,
+                check_every_n_seconds=0.1,
+                max_bucket_size=10,
+            )
+        elif model_name.startswith((
+            'gpt-o3',
+        )):
+            return InMemoryRateLimiter(
+                requests_per_second=5000/60 / llm_number,
+                check_every_n_seconds=0.1,
+                max_bucket_size=10,
+            )
+        else:
+            return InMemoryRateLimiter(
+                requests_per_second=60/60 / llm_number,
+                check_every_n_seconds=0.1,
+                max_bucket_size=10,
+            )
         # tier 2
-        return InMemoryRateLimiter(
-            requests_per_second=60/60 / llm_number,
-            check_every_n_seconds=0.1,
-            max_bucket_size=10,
-        )
 
     @staticmethod
     def create_google_rate_limiter(
