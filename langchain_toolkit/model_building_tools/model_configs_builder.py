@@ -56,7 +56,7 @@ class ModelConfigsBuilder:
             dict: 添加 rate_limiter 之后的dict。和传入的dict独立。
         """
         model_configs_ = model_configs.copy()
-        model_configs_['rate_limiter'] = rate_limiter
+        model_configs_.setdefault('rate_limiter', rate_limiter)
         return model_configs_
 
     # ====工具方法。====
@@ -79,7 +79,30 @@ class ModelConfigsBuilder:
             dict: 添加 max_retries 之后的dict。和传入的dict独立。
         """
         model_configs_ = model_configs.copy()
-        model_configs_['max_retries'] = max_retries or 10
+        model_configs_.setdefault('max_retries', max_retries or 10)
+        return model_configs_
+
+    @staticmethod
+    def add_normal_kwargs(
+        model_configs: dict,
+        model_client: Literal['openai', 'google', 'anthropic', 'dashscope', 'deepseek', 'ollama'],
+    ) -> dict:
+        model_configs_ = model_configs.copy()
+        # 根据每个client的情况添加参数。
+        if model_client == 'openai':
+            pass
+        elif model_client == 'google':
+            pass
+            # model_configs_.setdefault('transport', 'rest')
+        elif model_client == 'anthropic':
+            pass
+        elif model_client == 'dashscope':
+            pass
+        elif model_client == 'deepseek':
+            pass  # deepseek的reasoning模式不可设置，只有一种模式。
+        elif model_client == 'ollama':
+            pass
+        # 统一返回修改过后的配置。
         return model_configs_
 
     # ====工具方法。====
