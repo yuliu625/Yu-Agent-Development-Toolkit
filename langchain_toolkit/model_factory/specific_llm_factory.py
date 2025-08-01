@@ -58,8 +58,8 @@ class SpecificLLMFactory:
         from langchain_openai import ChatOpenAI
         llm = ChatOpenAI(
             model_name=model_name,
-            base_url=os.environ['OPENAI_API_BASE_URL'],
-            api_key=os.environ['OPENAI_API_KEY'],
+            # base_url=os.environ['OPENAI_API_BASE_URL'],
+            api_key=os.environ['OPENAI_API_KEY_'],  # 修改默认环境变量名称，避免被偷偷使用OpenAI-API资源。
             **(model_configs or {}),
         )
         return llm
