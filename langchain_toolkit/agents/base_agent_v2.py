@@ -55,7 +55,7 @@ class BaseAgent:
     """
     def __init__(
         self,
-        system_message: SystemMessage,
+        main_llm_system_message: SystemMessage,
         main_llm: BaseChatModel,
         main_llm_max_retries: int = 3,
         is_need_structured_output: bool = False,
@@ -79,7 +79,7 @@ class BaseAgent:
             is_need_structured_output (bool, optional): 是否需要结构化输出。如果不需要，仅一次响应。
             schema_pydantic_base_model (type[BaseModel], optional): 在需要结构化输出的情况下，进行dataclass检验。不指定，则不校验。
         """
-        self._main_system_message = system_message
+        self._main_llm_system_message = main_llm_system_message
         self._main_llm = main_llm
         self._main_llm_max_retries = main_llm_max_retries
         self._is_need_structured_output = is_need_structured_output
@@ -95,7 +95,7 @@ class BaseAgent:
             )
 
     # ====常见的默认统一方法。====
-    def process_state(
+    async def process_state(
         self,
         state,
         config: RunnableConfig,
