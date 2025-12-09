@@ -1,6 +1,19 @@
 """
 基础的agent。
 
+V1:
+    - 设计思路: 可以进行结构化输出agent，预先要求结构化输出，后续从输出中解析和提取需要的信息。
+    - features:
+        - 指令结构化输出: 在system-message中定义schema，同步的，在agent实例化时给出相同的定义。
+            - 这2个操作或许是不同步的，我构建了相关工具封装一致化操作 (基于OpenAI function-calling) ，但都不如具体去设计prompt。
+        - RE和JSON解析: 从全部的输出文本中解析需要的结构化数据。
+            - 如果没有目标输出，执行重试。
+
+保留V1的原因:
+    - 一体化: 当前模型做出的结构化输出，一定是与当前模型更一致的。
+        - 在高性能的模型中，结构化输出指令模型会完全遵循，并且不影响主要任务。
+    - 历史兼容: 我目前已发表的论文中，有基于这种实现方法的工程。
+
 使用我构建的工具类JsonOutputExtractor，但是简化大量可设置的参数。
 
 预期的派生类:
@@ -15,7 +28,6 @@ from __future__ import annotations
 from agnostic_utils.json_output_extractor import JsonOutputExtractor
 
 from langchain_core.messages import AIMessage
-
 from collections import Counter
 
 from typing import TYPE_CHECKING, Literal, Self, cast
