@@ -88,10 +88,12 @@ class BaseAgent:
         # self._schema_pydantic_base_model = schema_pydantic_base_model
         self._formatter_llm_max_retries = formatter_llm_max_retries
 
+        self._structured_llm = None
         if is_need_structured_output:
             self._structured_llm = self._build_structured_llm(
-                formatter_llm=formatter_llm,
+                llm=formatter_llm,
                 schema_pydantic_base_model=schema_pydantic_base_model,
+                max_retries=formatter_llm_max_retries,
             )
 
     # ====常见的默认统一方法。====
@@ -179,6 +181,7 @@ class BaseAgent:
         """
         # 获取main_llm的输出。
         # 自实现简单重试机制，避免网络问题。
+        response = None
         for _ in range(self._main_llm_max_retries):
             try:
                 response = await self.a_call_llm(
@@ -188,6 +191,8 @@ class BaseAgent:
                 break
             except Exception as e:
                 print(e)
+        if response is None:
+            raise RuntimeError("main llm 达到最大重试次数。")
         # 如果不需要结构化输出，直接返回响应结果。
         if not self._is_need_structured_output:
             return dict(
@@ -196,6 +201,7 @@ class BaseAgent:
             )
         # 如果需要结构化输出，在最大可重试次数内进行请求。
         else:
+            structured_output = None
             for _ in range(self._formatter_llm_max_retries):
                 try:
                     structured_output = await self.get_structured_output(
@@ -206,6 +212,8 @@ class BaseAgent:
                     break
                 except Exception as e:
                     print(e)
+            if structured_output is None:
+                raise RuntimeError("formatter llm 达到最大重试次数。")
             return dict(
                 ai_message=response,
                 structured_output=structured_output,
@@ -214,12 +222,30 @@ class BaseAgent:
     # ====工具方法。====
     def _build_structured_llm(
         self,
-        formatter_llm: BaseChatModel,
-        # formatter_system_message: SystemMessage,
+        llm: BaseChatModel,
         schema_pydantic_base_model: type[BaseModel],
+        # system_message: SystemMessage,
+        max_retries: int = 3,
     ) -> BaseChatModel:
-        structured_llm = formatter_llm.with_structured_output(
+        """
+        构造structured_llm的方法。
+
+        这个实现默认:
+            - 不对于system-message进行限制，不将system-message与llm提前绑定。
+                - 但相关控制需要使用structured_llm的方法实现。
+
+        Args:
+            llm (BaseChatModel): 基础的用于推理的基座模型。需要具有结构化提取功能。
+            schema_pydantic_base_model (BaseModel): 基于pydantic定义的schema。
+            max_retries (int): 最大重试次数。基于runnable本身的实现。
+
+        Returns:
+            BaseChatModel: 被限制为仅会进行结构化输出的structured_llm。
+        """
+        structured_llm = llm.with_structured_output(
             schema=schema_pydantic_base_model,
+        ).with_retry(
+            stop_after_attempt=max_retries,
         )
         structured_llm = cast('BaseChatModel', structured_llm)
         return structured_llm
