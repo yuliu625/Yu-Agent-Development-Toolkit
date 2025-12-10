@@ -59,9 +59,13 @@ class StructuredOutputHelper:
 
         这个方法默认:
             - 文本数据。目前仅对于文本进行提取。
+                - 如果需要多模态数据，可以多一步转换，结果更加可靠和稳定。
 
         Args:
             raw_str (str): 原始被提取的文本。
+
+        States:
+            _structured_llm (BaseChatModel): 构造好的可以进行结构化提取的llm。
 
         Returns:
             BaseModel: 基于pydantic定义的schema的数据对象。
