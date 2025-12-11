@@ -16,6 +16,7 @@ V2:
         - 简化语法: 我不再使用复杂的langchain语法。包括:
             - llm和messages分离: 不再将chat-prompt-template与llm绑定，而是简单使用list完全控制所有context。
                 - llm完全无状态，并且适用于修改和异步和多线程编程。
+                - 不再使用ChatPromptTemplate，仅使用list[AnyMessage]，显式控制全部的全部context。
 
 可能会增加的机制:
     - 回溯: 当main-llm输出出现问题，formatter-llm无法正确提取信息，可以执行重试。(但该结构设计为更大的agent-flow会更好。)
@@ -23,14 +24,13 @@ V2:
 
 from __future__ import annotations
 
-from langchain_core.messages import AIMessage, HumanMessage
+from langchain_core.messages import HumanMessage
 
-from typing import TYPE_CHECKING, Literal, cast
+from typing import TYPE_CHECKING, cast
 if TYPE_CHECKING:
     from langchain_core.runnables import RunnableConfig
     from langchain_core.language_models import BaseChatModel
-    from langchain_core.messages import AnyMessage, SystemMessage
-    from langchain_core.prompts import ChatPromptTemplate
+    from langchain_core.messages import AnyMessage, SystemMessage, AIMessage
     from pydantic import BaseModel
 
 
@@ -38,55 +38,71 @@ class BaseAgent:
     """
     基础的agent。具体结构化数据提取的功能。
 
-    注意:
-        - 没有chat-history维护的功能，仅持有system-prompt的状态。如果实现:
+    Notes:
+        - 没有context维护的功能，完全不持有message相关的状态。如果实现:
             - langchain: 在派生类中以属性维护。
             - langgraph: 维护图状态。
-            2种实现派生类均需要实现chat-history的管理，可灵活自定义。
-        - 多模态支持。熟悉命名中为llm，但也支持vlm。如果实现，需要相关的chat-history方法支持。
+            2种实现派生类均需要实现context的管理，可灵活自定义。
+        - 多模态支持。熟悉命名中为llm，但也支持vlm。如果实现，需要相关的context方法支持。
 
     具有功能:
         - 请求LLM进行生成。
         - 结构化输出校验和重试。
 
     预期使用方法:
-        - 继承该超类，指定BaseAgent类型，仅管理chat-history，使用call_llm_with_retry方法。
-        - 如果需要，对于具体的LLM，重写call_llm方法。
+        - 继承该超类，指定BaseAgent类型，仅管理context，使用a_call_llm_with_retry方法。
+        - 如果需要，对于具体的LLM，重写a_call_llm方法。
+
+    可能存在的优化:
+        - 用pydantic定义a_call_llm_with_retry的输出。
     """
     def __init__(
         self,
-        main_llm_system_message: SystemMessage,
         main_llm: BaseChatModel,
+        main_llm_system_message: SystemMessage,
         main_llm_max_retries: int = 3,
         is_need_structured_output: bool = False,
         formatter_llm: BaseChatModel | None = None,
-        formatter_system_message: SystemMessage | None = None,
         schema_pydantic_base_model: type[BaseModel] = None,
+        formatter_llm_system_message: SystemMessage | None = None,
         formatter_llm_max_retries: int = 3,
     ):
         """
         必要的初始化参数。
 
         指定参数方法有:
-            - 一般agent: 仅指定[chat_prompt_template, llm]。
-            - 提取输出agent: 指定[chat_prompt_template, llm, is_need_structured_output=True]。
-            - 强结构数据输出agent: 指定[chat_prompt_template, llm, is_need_structured_output=True, schema_pydantic_base_model, schema_check_type]
+            - 一般agent: 仅指定main_llm相关参数。
+            - 强结构数据输出agent: 设置is_need_structured_output=True，并需要额外指定formatter_llm相关参数。
 
         Args:
-            main_llm (BaseChatModel): chat-model，可以生成内容。
-            main_llm_max_retries (int): 最大尝试生成次数。默认为10，更多的重试可能无意义，和模型的能力很有关系。
-            is_need_structured_output (bool, optional): 是否需要结构化输出。如果不需要，仅一次响应。
-            schema_pydantic_base_model (type[BaseModel], optional): 在需要结构化输出的情况下，进行dataclass检验。不指定，则不校验。
+            main_llm (BaseChatModel): 任意的llm，可以生成内容。(甚至是runnable即可。)
+            main_llm_system_message (SystemMessage): main_llm的指令。
+            main_llm_max_retries (int): 最大尝试生成次数。默认为3。
+            is_need_structured_output (bool, optional): 是否需要结构化输出。如果不需要，返回的输出中structured_output为None。
+            formatter_llm (BaseChatModel, optional): 有with_structured_output实现的llm，会被用于structured_llm的构造。
+            schema_pydantic_base_model (type[BaseModel], optional): 在需要结构化输出的情况下，进行dataclass检验。(这里的docstring对formatter很重要。)
+            formatter_llm_system_message (SystemMessage, optional): formatter的指令。(有常见通用指令，也可以具体自定义。)
+            formatter_llm_max_retries (int): 最大尝试生成次数。默认为3。
         """
-        self._main_llm_system_message = main_llm_system_message
+        # main llm
         self._main_llm = main_llm
+        self._main_llm_system_message = main_llm_system_message
         self._main_llm_max_retries = main_llm_max_retries
+        # formatter llm
         self._is_need_structured_output = is_need_structured_output
-        self._formatter_system_message = formatter_system_message
-        self._formatter_llm_max_retries = formatter_llm_max_retries
-
+        self._formatter_llm_system_message = formatter_llm_system_message  # 这个参数应该作为BaseAgent的内部属性，调用主要方法自动使用。
+        self._formatter_llm_max_retries = formatter_llm_max_retries  # 这个参数应该作为BaseAgent的内部属性，调用主要方法自动使用。
+        # build structured llm
         self._structured_llm = None
         if is_need_structured_output:
+            # 判断参数合法性。
+            if not (
+                formatter_llm is not None
+                and schema_pydantic_base_model is not None
+                and formatter_llm_system_message is not None
+            ):
+                raise ValueError("需要结构化输出，formatter相关的参数不能为None。")
+            # 在需要结构化输出时构建，直接用实例化传入的参数构造structured llm。
             self._structured_llm = self._build_structured_llm(
                 llm=formatter_llm,
                 schema_pydantic_base_model=schema_pydantic_base_model,
@@ -115,42 +131,7 @@ class BaseAgent:
         """
         raise NotImplementedError("一般MAS中，所有agent的统一的注册方法。")
 
-    # ====最基础方法。====
-    async def a_call_llm(
-        self,
-        llm: BaseChatModel,
-        messages: list[AnyMessage],
-    ) -> AIMessage:
-        """
-        构建chain，进行内容生成。
-
-        这是一个最常用的chain。独立构建是为了:
-            - 自主维护chat-history。
-            - 更好的控制LLM。
-
-        注意:
-            - 约定chat_history是以'chat_history'这个key传递。
-            - 对于传入的chat_prompt_template，它是以system-message而不是以system-message-prompt-template初始化的。因为:
-                - system-message更加安全。
-                - system-message-prompt-template可以提前format。
-                - chat_prompt_template可以以partial实现类似的效果，但复杂化问题。
-                - 这个类默认是固定身份的agent，并处于确定的计算图。
-            - 默认LLM的响应一定是AIMessage。
-
-        Args:
-            llm (BaseChatModel): chat-model，可以生成内容。
-            messages (list[AnyMessage]): 全部的messages。
-
-        Returns:
-            AIMessage: LLM的增量响应。如果包含tool-use的内容，会包含在AIMessage中。
-        """
-        # llm_chain = chat_prompt_template | llm
-        response = await llm.ainvoke(input=messages)
-        response = cast('AIMessage', response)
-        # assert isinstance(response, AIMessage)
-        return response
-
-    # ====主要方法。====
+    # ====暴露方法。====
     async def a_call_llm_with_retry(
         self,
         messages: list[AnyMessage],
@@ -201,7 +182,7 @@ class BaseAgent:
                     structured_output = await self.get_structured_output(
                         raw_str=response.content,
                         structured_llm=self._structured_llm,
-                        formatter_system_message=self._formatter_system_message,
+                        formatter_system_message=self._formatter_llm_system_message,
                     )
                     break
                 except Exception as e:
@@ -212,6 +193,33 @@ class BaseAgent:
                 ai_message=response,
                 structured_output=structured_output,
             )  # 输出2: 仅输出ai_message，同时提供structured_output。
+
+    # ====主要方法。====
+    async def a_call_llm(
+        self,
+        llm: BaseChatModel,
+        messages: list[AnyMessage],
+    ) -> AIMessage:
+        """
+        使用context，通过llm进行内容生成。
+
+        相比较V1的实现，该实现取消了ChatPromptTemplate的构造，并且在函数内部不再构造chain。
+
+        Notes:
+            - system-message自我管理: 对于这个实现，调用该方法的函数需要在messages中自行控制system-message。
+
+        Args:
+            llm (BaseChatModel): chat-model，可以生成内容。
+            messages (list[AnyMessage]): 全部的messages。
+
+        Returns:
+            AIMessage: LLM的增量响应。如果包含tool-use的内容，会包含在AIMessage中。
+        """
+        # assert isinstance(messages[0], SystemMessage)  # 断言第一个message类型，非必要，部分推理框架有默认配置。
+        response = await llm.ainvoke(input=messages)
+        response = cast('AIMessage', response)
+        # assert isinstance(response, AIMessage)
+        return response
 
     # ====主要方法。====
     async def get_structured_output(
@@ -241,7 +249,7 @@ class BaseAgent:
             input=[
                 formatter_system_message,
                 HumanMessage(raw_str),
-            ]
+            ],
         )
         return response
 
