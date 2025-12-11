@@ -1,4 +1,6 @@
 """
+Source: https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/agnostic_utils/json_output_extractor.py
+
 从字符串中提取用markdown-code-cell包裹的json数据。
 
 一般的使用场景是:
