@@ -27,6 +27,7 @@ V2:
 from __future__ import annotations
 
 from langchain_core.messages import HumanMessage
+from pydantic import BaseModel, Field
 
 from typing import TYPE_CHECKING, cast
 if TYPE_CHECKING:
@@ -34,6 +35,15 @@ if TYPE_CHECKING:
     from langchain_core.language_models import BaseChatModel
     from langchain_core.messages import AnyMessage, SystemMessage, AIMessage
     from pydantic import BaseModel
+
+
+class BaseAgentResponse(BaseModel):
+    ai_message: AIMessage = Field(
+        description="原始的LLM返回的AIMessage",
+    )
+    structured_output: BaseModel | None = Field(
+        description="根据BaseAgent的设置，提取的结构化输出。"
+    )
 
 
 class BaseAgent:
@@ -137,7 +147,7 @@ class BaseAgent:
     async def a_call_llm_with_retry(
         self,
         messages: list[AnyMessage],
-    ) -> dict[str, AIMessage | None]:
+    ) -> BaseAgentResponse:
         """
         请求LLM直至生成满足要求的结构化输出。
 
@@ -172,7 +182,7 @@ class BaseAgent:
             raise RuntimeError("main llm 达到最大重试次数。")
         # 如果不需要结构化输出，直接返回响应结果。
         if not self._is_need_structured_output:
-            return dict(
+            return BaseAgentResponse(
                 ai_message=response,
                 structured_output=None,
             )  # 输出1: 仅输出ai_message，没有structured_output。
@@ -191,7 +201,7 @@ class BaseAgent:
                     print(e)
             if structured_output is None:
                 raise RuntimeError("formatter llm 达到最大重试次数。")
-            return dict(
+            return BaseAgentResponse(
                 ai_message=response,
                 structured_output=structured_output,
             )  # 输出2: 仅输出ai_message，同时提供structured_output。
