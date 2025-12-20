@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-# import MASState here  # 由于构建graph_builder需要使用到MASState，因此不能仅以类型声明。
+# from ? import MASState  # 由于构建graph_builder需要使用到MASState，因此不能仅以类型声明。
 
 from langgraph.graph import (
     StateGraph,
@@ -24,7 +24,7 @@ class BaseGraphBuilder:
     """
     def __init__(
         self,
-        state,
+        state#: type[MASState],
     ):
         # 初始化计算图构建。实际中不会以变量传入state，因为state为数据类，更多实现方法为以包导入并写死。
         self.graph_builder = StateGraph(state)
