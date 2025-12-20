@@ -1,4 +1,7 @@
 """
+Source: https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/langchain_toolkit/prompt_management/prompt_template_loader.py
+Source: https://github.com/yuliu625/Yu-Prompt-Collection/blob/main/prompt_management_methods/prompt_template_loader.py
+
 从指定路径加载prompt-template的方法。
 
 我实际工程的规范:
