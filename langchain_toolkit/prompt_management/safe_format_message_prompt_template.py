@@ -1,4 +1,7 @@
 """
+Source: https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/langchain_toolkit/prompt_management/safe_format_message_prompt_template.py
+Source: https://github.com/yuliu625/Yu-Prompt-Collection/blob/main/prompt_management_methods/safe_format_message_prompt_template.py
+
 对message-prompt-template的安全format方法。
 
 约定行为:
