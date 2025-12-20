@@ -1,5 +1,11 @@
 """
+Source: https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/langchain_toolkit/model_factory/specific_llm_factory.py
+
 来自llm_factory，但是并不使用openai兼容API，而是使用各家具体的client。
+
+未来改动: 由于科研导向需求，该工具未来做出以下改动:
+    - 中间件: 自行维护各种API过于费力，未来考虑使用如LiteLLM，仅维护配置文件，不再进行具体实现。
+    - 中间商: 考虑支付部分比例服务器，使用中间商统一服务。
 """
 
 from __future__ import annotations
