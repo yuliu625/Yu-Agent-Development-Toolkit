@@ -38,6 +38,9 @@ if TYPE_CHECKING:
 
 
 class BaseAgentResponse(BaseModel):
+    """
+    当前文件BaseAgent中定义的输出格式。可根据具体项目需求修改。
+    """
     ai_message: AIMessage = Field(
         description="原始的LLM返回的AIMessage",
     )
