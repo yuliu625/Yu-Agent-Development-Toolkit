@@ -17,25 +17,31 @@ class GraphVisualizer:
 
     封装了mermaid相关获取可视化graph的方法，主要方法是打印mermaid-code。
     """
+    # ====主要方法。====
     @staticmethod
-    def get_mermaid_code(graph: CompiledStateGraph) -> str:
+    def get_mermaid_code(
+        graph: CompiledStateGraph,
+    ) -> str:
         """
         最主要的方法。获取mermaid-code。
 
         在 https://mermaid.live/ 中复制输出的code，然后查看图像。
 
         Args:
-            graph: 已经编译好的graph。
+            graph (CompiledStateGraph): 已经编译好的graph。
 
         Returns:
-            (str), mermaid-code，使用print打印返回结果，然后复制。
+            str: mermaid-code，使用print打印返回结果，然后复制。
         """
         mermaid_code = graph.get_graph(xray=True).draw_mermaid()
         # print(mermaid_code)
         return mermaid_code
 
+    # ====备用方法。====
     @staticmethod
-    def get_mermaid_png(graph: CompiledStateGraph) -> Image:
+    def get_mermaid_png(
+        graph: CompiledStateGraph,
+    ) -> Image:
         """
         获取mermaid的图片。
 
@@ -45,16 +51,17 @@ class GraphVisualizer:
         可进行修改，增加图片渲染相关的kwargs。
 
         Args:
-            graph: 已经编译好的graph。
+            graph (CompiledStateGraph): 已经编译好的graph。
 
         Returns:
-            (Image), png图片，默认渲染效果不好。
-            在ipynb中，可以直接打印graph生成图片，不需要该方法。。
+            Image: png图片，默认渲染效果不好。
+                在ipynb中，可以直接打印graph生成图片，不需要该方法。
         """
         mermaid_png = Image(graph.get_graph(xray=True).draw_mermaid_png())
         display(mermaid_png)
         return mermaid_png
 
+    # ====备用方法。====
     @staticmethod
     def save_mermaid_png(
         graph: CompiledStateGraph,
@@ -64,11 +71,11 @@ class GraphVisualizer:
         保存mermaid的图片。
 
         Args:
-            graph: 已经编译好的graph。
-            output_file_path: 保存图片的路径。
+            graph (CompiledStateGraph): 已经编译好的graph。
+            output_file_path (str): 保存图片的路径。
 
         Returns:
-            (Image), png图片，渲染的时候保存至指定路径。
+            Image: png图片，渲染的时候保存至指定路径。
         """
         mermaid_png = Image(graph.get_graph(xray=True).draw_mermaid_png(output_file_path=output_file_path))
         return mermaid_png
