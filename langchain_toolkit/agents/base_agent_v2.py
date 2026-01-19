@@ -27,7 +27,10 @@ V2:
 from __future__ import annotations
 from loguru import logger
 
-from langchain_core.messages import HumanMessage
+from langchain_core.messages import (
+    HumanMessage,
+    AIMessage,
+)
 from pydantic import BaseModel, Field
 
 from typing import TYPE_CHECKING, cast
@@ -46,7 +49,7 @@ class BaseAgentResponse(BaseModel):
         description="原始的LLM返回的AIMessage",
     )
     structured_output: BaseModel | None = Field(
-        description="根据BaseAgent的设置，提取的结构化输出。"
+        description="根据BaseAgent的设置，提取的结构化输出。",
     )
 
 
@@ -186,6 +189,7 @@ class BaseAgent:
             raise RuntimeError("main llm 达到最大重试次数。")
         # 如果不需要结构化输出，直接返回响应结果。
         if not self._is_need_structured_output:
+            logger.debug(f"Type of response: {type(response)}")
             return BaseAgentResponse(
                 ai_message=response,
                 structured_output=None,
