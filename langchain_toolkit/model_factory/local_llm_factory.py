@@ -13,6 +13,7 @@
 """
 
 from __future__ import annotations
+from loguru import logger
 
 from langchain_ollama.chat_models import ChatOllama  # from langchain_community.chat_models import ChatOllama
 # from langchain.llms import LlamaCpp
@@ -33,7 +34,10 @@ class LocalLLMFactory:
     @staticmethod
     def create_ollama_llm(
         model_name: str,
-        model_configs: dict = None,
+        reasoning: bool | None,
+        temperature: float,
+        num_predict: int | None,
+        model_configs: dict,
     ) -> BaseChatModel:
         """
         使用ollama本地运行模型。
@@ -50,23 +54,37 @@ class LocalLLMFactory:
         Args:
             model_name (str): 具体的模型。
                 实际为Literal，在 https://ollama.com/ 查看。有命名空间，需要区别checkpoint等。
-            model_configs (dict, optional): 对于ChatOllama构造指定的kwargs。
+            reasoning:
+            temperature:
+            num_predict:
+            model_configs (dict): 对于ChatOllama构造指定的kwargs。
 
         Returns:
             BaseChatModel: langchain中可用于对话的LLM。
         """
+        logger.debug(f"Model configs: {model_configs}")
         llm = ChatOllama(
             model=model_name,
-            **(model_configs or {}),
+            reasoning=reasoning,
+            temperature=temperature,
+            num_predict=num_predict,
+            **model_configs,
         )
+        logger.info(f"Created {model_name}.")
         return llm
 
-    # ====预留的方法。但最好以新构建一个类来实现。====
+    # ====使用OpenAI API兼容的服务。====
     @staticmethod
-    def create_local_llm_by_url(
+    def create_openai_llm(
         base_url: str,
         model_name: str,
-        model_configs: dict = None,
+        temperature: float | None,
+        max_tokens: int | None,
+        logprobs: bool | None,
+        # stream_options: dict,
+        use_responses_api: bool | None,
+        max_retries: int | None,
+        model_configs: dict,
     ) -> BaseChatModel:
         """
         使用相关推理框架，在本地运行模型。
@@ -79,17 +97,31 @@ class LocalLLMFactory:
         Args:
             base_url (str): 本地推理服务的地址。
             model_name (str): 模型的名称。
-            model_configs (dict, optional): 对于ChatOpenAI构造函数指定的kwargs。
+            temperature:
+            max_tokens:
+            logprobs:
+            use_responses_api:
+            max_retries (int):
+            model_configs (dict): 对于ChatOpenAI构造函数指定的kwargs。
+
 
         Returns:
             BaseChatModel: langchain中可用于对话的LLM。
         """
+        logger.debug(f"Model configs: {model_configs}")
         llm = ChatOpenAI(
-            model_name=model_name,
-            base_url=base_url,
-            api_key='None',  # 类似vllm不需要校验api-key。
-            **(model_configs or {}),
+            base_url=base_url,  # 如果基于vllm，base_url是最重要的。
+            model=model_name,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            logprobs=logprobs,
+            # streaming=stream_options,
+            use_responses_api=use_responses_api,
+            max_retries=max_retries,
+            api_key=None,  # 类似vllm不需要校验api-key。
+            **model_configs,
         )
+        logger.info(f"Created {model_name}.")
         return llm
 
     # ====预留的方法。但不是最好的实践。====
@@ -97,5 +129,10 @@ class LocalLLMFactory:
     def create_huggingface_llm(
         *args, **kwargs,
     ) -> BaseChatModel:
-        """不是一个很好的做法。根据具体情况去实现。"""
+        """
+        使用基于huggingface上的checkpoint运行模型。
+
+        仅适用于原型测试。不是很好的做法，大规模运行需要根据具体情况去实现。
+        """
+        raise NotImplementedError
 
