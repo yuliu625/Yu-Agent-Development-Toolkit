@@ -43,7 +43,7 @@ class TestBaseAgent:
             main_llm=main_llm,
             main_llm_system_message=main_llm_system_message,
             main_llm_max_retries=3,
-            is_need_structured_output=False,
+            is_need_structured_output=False,  # 这里设置为False进行简单测试。
             formatter_llm=None,
             schema_pydantic_base_model=None,
             formatter_llm_system_message=None,
@@ -57,9 +57,39 @@ class TestBaseAgent:
         )
         logger.info(f"\nLLM Response: \n{response}")
 
-    # @pytest.mark.parametrize()
-    # async def test_structured_output_agent(
-    #     self,
-    # ):
-    #     ...
+    @pytest.mark.parametrize(
+        "main_llm, main_llm_system_message, formatter_llm, schema_pydantic_base_model, formatter_llm_system_message", [
+        (LocalLLMFactory.create_ollama_llm(model_name='qwen2.5:1.5b', reasoning=None, temperature=0.7, num_predict=None, model_configs={}),
+         SystemMessage(content="You are Bob. You are 18 years old."),
+         LocalLLMFactory.create_ollama_llm(model_name='qwen2.5:1.5b', reasoning=None, temperature=0.7, num_predict=None, model_configs={}),
+         Person,
+         SystemMessage(content="You extract person information from message."),)
+    ])
+    @pytest.mark.asyncio
+    async def test_structured_output_agent(
+        self,
+        main_llm: BaseChatModel,
+        main_llm_system_message: SystemMessage,
+        formatter_llm: BaseChatModel | None,
+        schema_pydantic_base_model: type[BaseModel],
+        formatter_llm_system_message: SystemMessage | None,
+    ):
+        agent = BaseAgent(
+            main_llm=main_llm,
+            main_llm_system_message=main_llm_system_message,
+            main_llm_max_retries=3,
+            is_need_structured_output=True,  # 这里设置为True进行进阶测试。
+            formatter_llm=formatter_llm,
+            schema_pydantic_base_model=schema_pydantic_base_model,
+            formatter_llm_system_message=formatter_llm_system_message,
+            formatter_llm_max_retries=3,
+        )
+        response = await agent.a_call_llm_with_retry(
+            messages=[
+                main_llm_system_message,
+                HumanMessage("Who are you? How old are you?"),
+            ],
+        )
+        logger.info(f"\nAgent Response: \n{response}")
+        logger.info(f"\nAgent Structured Output: \n{response.structured_output}")
 
