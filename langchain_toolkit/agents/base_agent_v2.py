@@ -25,6 +25,7 @@ V2:
 """
 
 from __future__ import annotations
+from loguru import logger
 
 from langchain_core.messages import HumanMessage
 from pydantic import BaseModel, Field
@@ -180,7 +181,7 @@ class BaseAgent:
                 )
                 break
             except Exception as e:
-                print(e)
+                logger.error(e)
         if response is None:
             raise RuntimeError("main llm 达到最大重试次数。")
         # 如果不需要结构化输出，直接返回响应结果。
@@ -201,7 +202,7 @@ class BaseAgent:
                     )
                     break
                 except Exception as e:
-                    print(e)
+                    logger.error(e)
             if structured_output is None:
                 raise RuntimeError("formatter llm 达到最大重试次数。")
             return BaseAgentResponse(
