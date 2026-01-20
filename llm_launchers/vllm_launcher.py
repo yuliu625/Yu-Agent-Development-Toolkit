@@ -29,6 +29,10 @@ class VLLMLauncher:
         host: str | None = None,
         port: int | None = None,
         gpu_memory_utilization: float | None = None,
+        tensor_parallel_size: int | None = None,
+        max_model_len: int | None = None,
+        max_num_batched_tokens: int | None = None,
+        max_num_seqs: int | None = None,
         lora_modules: dict[str, str] | None = None,
     ) -> CompletedProcess[str]:
         """
@@ -40,6 +44,10 @@ class VLLMLauncher:
             host (str, optional): url的host部分。我默认为local host。
             port (int, optional): url的端口号。这会在同时运行多个模型时很有用。
             gpu_memory_utilization:
+            tensor_parallel_size:
+            max_model_len:
+            max_num_batched_tokens:
+            max_num_seqs:
             lora_modules (dict[str, str], optional): 加载adapter的具体设置。
 
         Returns:
@@ -62,6 +70,14 @@ class VLLMLauncher:
             command.extend(['--port', str(port)])
         if gpu_memory_utilization:
             command.extend(['--gpu-memory--utilization', str(gpu_memory_utilization)])
+        if tensor_parallel_size:
+            command.extend(['--tensor-parallel-size', str(tensor_parallel_size)])
+        if max_model_len:
+            command.extend(['--max-model-leng', str(max_model_len)])
+        if max_num_batched_tokens:
+            command.extend(['--max-batched-tokens', str(max_num_batched_tokens)])
+        if max_num_seqs:
+            command.extend(['--max-seqs', str(max_num_seqs)])
         if lora_modules:
             command.extend(['--lora-modules', lora_modules])
         # launch vllm server
@@ -92,6 +108,10 @@ if __name__ == '__main__':
         host='127.0.0.1',
         port=8000,
         gpu_memory_utilization=0.1,
+        tensor_parallel_size=1,
+        max_model_len=None,
+        max_num_batched_tokens=None,
+        max_num_seqs=None,
         lora_modules=None,
     )
 
