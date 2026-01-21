@@ -1,15 +1,22 @@
 """
-Document source: https://docs.vllm.ai/en/stable/cli/serve/
+Sources:
+https://github.com/yuliu625/Yu-Agent-Development-Toolkit/llm_launchers/vllm_launcher.py
+    https://github.com/yuliu625/Yu-CLI-Wrapper/llm_launcher/vllm_launcher.py
 
-VLLM的启动器。
+References:
+    https://docs.vllm.ai/en/stable/cli/serve/
 
-VLLM的设计使得在部署推理服务时，使用CLI是更好的选择。然而大量基于 shell 的输入很不方便，因此我进行了封装。
-这个实现是基于 VLLM V1，主要场景是本地推理服务。
+Synopsis:
+    VLLM的启动器。
 
-目的:
-    - 封装shell输入: 使用subprocess封装用shell启动和配置vllm的输入。
-    - 复用: 自动参数处理。
-    - 隔离环境: 独立推理环境，减少开发环境依赖管理复杂度。
+Notes:
+    VLLM的设计使得在部署推理服务时，使用CLI是更好的选择。然而大量基于 shell 的输入很不方便，因此我进行了封装。
+    这个实现是基于 VLLM V1，主要场景是本地推理服务。
+
+    目的:
+        - 封装shell输入: 使用subprocess封装用shell启动和配置vllm的输入。
+        - 复用: 自动参数处理。
+        - 隔离环境: 独立推理环境，减少开发环境依赖管理复杂度。
 """
 
 from __future__ import annotations
