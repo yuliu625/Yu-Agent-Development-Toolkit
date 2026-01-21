@@ -25,7 +25,7 @@ class VLLMLauncher:
     @staticmethod
     def start_vllm(
         mode: Literal['serve', 'chat'],  # 目前需求是serve和chat，后续添加其他方法。
-        model: str,
+        model_name_or_path: str,
         host: str | None = None,
         port: int | None = None,
         gpu_memory_utilization: float | None = None,
@@ -40,7 +40,7 @@ class VLLMLauncher:
 
         Args:
             mode (Literal['serve', 'chat']): 启动 vllm 的方式，根据文档进行的设置。
-            model (str): 模型的路径。这个工具类主要可以简化和灵活设置的地方。
+            model_name_or_path (str): 模型的路径。这个工具类主要可以简化和灵活设置的地方。
             host (str, optional): url的host部分。我默认为local host。
             port (int, optional): url的端口号。这会在同时运行多个模型时很有用。
             gpu_memory_utilization:
@@ -58,26 +58,26 @@ class VLLMLauncher:
         ]
         # set the mode
         if mode == 'serve':
-            command.extend(['serve'])
+            command.extend(['serve'])  # 为了通用性设置这个。
         elif mode == 'chat':
             command.extend(['chat'])
         # set the model path, which is necessary
-        command.extend(['--model', model])
+        command.extend([model_name_or_path])  # new version vllm do not use --model option
         # conditional add other args
         if host:
             command.extend(['--host', host])
         if port:
             command.extend(['--port', str(port)])
         if gpu_memory_utilization:
-            command.extend(['--gpu-memory--utilization', str(gpu_memory_utilization)])
+            command.extend(['--gpu-memory-utilization', str(gpu_memory_utilization)])
         if tensor_parallel_size:
             command.extend(['--tensor-parallel-size', str(tensor_parallel_size)])
         if max_model_len:
             command.extend(['--max-model-leng', str(max_model_len)])
         if max_num_batched_tokens:
-            command.extend(['--max-batched-tokens', str(max_num_batched_tokens)])
+            command.extend(['--max-num-batched-tokens', str(max_num_batched_tokens)])
         if max_num_seqs:
-            command.extend(['--max-seqs', str(max_num_seqs)])
+            command.extend(['--max-num-seqs', str(max_num_seqs)])
         if lora_modules:
             command.extend(['--lora-modules', lora_modules])
         # launch vllm server
@@ -104,7 +104,7 @@ if __name__ == '__main__':
     # 一次设置以下参数即可。如果有多个模型需要部署，简单的，复制和配置该文件多次。
     VLLMLauncher.start_vllm(
         mode='serve',
-        model=r'',
+        model_name_or_path=r'',
         host='127.0.0.1',
         port=8000,
         gpu_memory_utilization=0.1,
