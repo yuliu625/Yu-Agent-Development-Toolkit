@@ -45,9 +45,9 @@ class ContentAnnotator:
             str: 包裹了html注释的字符串。
         """
         return (
-            f"<!--{tag}-start-->\n\n"
+            f"<!--{tag}-start-->\n"
             + original_text
-            + f"\n\n<!--{tag}-end-->"
+            + f"\n<!--{tag}-end-->"
         )
 
     @staticmethod
@@ -56,8 +56,8 @@ class ContentAnnotator:
         original_text: str,
     ) -> str:
         return (
-            f"<{tag}>\n\n"
+            f"<{tag}>\n"
             + original_text
-            + f"\n\n</{tag}>"
+            + f"\n</{tag}>"
         )
 
