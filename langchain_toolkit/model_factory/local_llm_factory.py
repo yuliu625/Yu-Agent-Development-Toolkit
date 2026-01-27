@@ -118,7 +118,7 @@ class LocalLLMFactory:
             # streaming=stream_options,
             use_responses_api=use_responses_api,
             max_retries=max_retries,
-            api_key=None,  # 类似vllm不需要校验api-key。
+            api_key='None',  # 类似vllm不需要校验api-key。
             **model_configs,
         )
         logger.info(f"Created {model_name}.")
