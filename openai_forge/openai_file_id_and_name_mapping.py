@@ -15,7 +15,8 @@ from __future__ import annotations
 from loguru import logger
 
 from typing import TYPE_CHECKING, Sequence, Mapping
-# if TYPE_CHECKING:
+if TYPE_CHECKING:
+    from openai.types import FileObject
 
 
 class OpenAIFileIdAndNameMappingMethods:
@@ -23,23 +24,39 @@ class OpenAIFileIdAndNameMappingMethods:
     def collect_file_name_to_id_mapping(
         file_objects: Sequence[Mapping],
     ) -> dict[str, str]:
-        ...
+        name_to_id = {
+            file_object['filename']: file_object['id']
+            for file_object in file_objects
+        }
+        return name_to_id
 
     @staticmethod
     def collect_file_id_to_name_mapping(
         file_objects: Sequence[Mapping],
     ) -> dict[str, str]:
-        ...
+        id_to_name_mapping = {
+            file_object['id']: file_object['filename']
+            for file_object in file_objects
+        }
+        return id_to_name_mapping
 
     @staticmethod
     def collect_all_file_id(
         file_objects: Sequence[Mapping],
     ) -> list[str]:
-        ...
+        file_ids = [
+            file_object['id']
+            for file_object in file_objects
+        ]
+        return file_ids
 
     @staticmethod
     def collect_all_file_name(
         file_objects: Sequence[Mapping],
     ) -> list[str]:
-        ...
+        file_names = [
+            file_object['filename']
+            for file_object in file_objects
+        ]
+        return file_names
 
