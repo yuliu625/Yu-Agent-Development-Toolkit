@@ -17,6 +17,8 @@ Notes:
 from __future__ import annotations
 from loguru import logger
 
+from openai.types import Completion
+
 from typing import TYPE_CHECKING, Mapping, overload
 if TYPE_CHECKING:
     from openai.types import Completion
