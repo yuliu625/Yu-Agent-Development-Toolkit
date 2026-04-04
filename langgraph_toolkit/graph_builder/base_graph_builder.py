@@ -1,10 +1,24 @@
 """
-这是一个graph-builder的Boilerplate。复制下面的代码，然后在具体项目中进行修改。
+Sources:
+    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/langgraph_toolkit/graph_builder/base_graph_builder.py
+
+References:
+    None
+
+Synopsis:
+    graph builder boilerplate
+
+Notes:
+    复制下面的代码，然后在具体项目中进行修改。
+
+    Refactor:
+        以下构造器是有状态的，可以函数式重构，以实现更加显式和可信。
 """
 
 from __future__ import annotations
+from loguru import logger
 
-# from ? import MASState  # 由于构建graph_builder需要使用到MASState，因此不能仅以类型声明。
+# from ? import MASState  # 由于构建 graph_builder 需要使用到 MASState ，因此不能仅以类型声明。
 
 from langgraph.graph import (
     StateGraph,
@@ -26,7 +40,7 @@ class BaseGraphBuilder:
         self,
         state#: type[MASState],
     ):
-        # 初始化计算图构建。实际中不会以变量传入state，因为state为数据类，更多实现方法为以包导入并写死。
+        # 初始化计算图构建。实际中不会以变量传入 state ，因为 state 为数据类，更多实现方法为以包导入并硬编码。
         self.graph_builder = StateGraph(state)
         # 注册需要的工具。
 
@@ -41,11 +55,11 @@ class BaseGraphBuilder:
 
     def _add_nodes(self):
         """
-        注册MAS的nodes。
+        注册 MAS 的 nodes 。
         """
 
     def _add_edges(self):
         """
-        注册MAS的edges。
+        注册 MAS 的 edges 。
         """
 
