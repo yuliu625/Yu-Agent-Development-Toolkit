@@ -37,14 +37,36 @@ class ContentAnnotator:
         tag: str,
         original_text: str,
     ) -> str:
-        raise NotImplementedError
+        # 执行检测。
+        stripped_text = original_text.strip()
+        if stripped_text.startswith(f"<!--{tag}-start-->") and stripped_text.endswith(f"<!--{tag}-end-->"):
+            # model 自己加了 tag 。
+            logger.info(f"HTML annotation {tag} already exists.")
+            return original_text
+        else:
+            # 正常添加 tag 。
+            return ContentAnnotator.annotate_with_html(
+                tag=tag,
+                original_text=original_text,
+            )
 
     @staticmethod
     def safe_annotate_with_xml(
         tag: str,
         original_text: str,
     ) -> str:
-        raise NotImplementedError
+        # 执行检测。
+        stripped_text = original_text.strip()
+        if stripped_text.startswith(f"<{tag}>") and stripped_text.endswith(f"</{tag}>"):
+            # model 自己加了 tag 。
+            logger.info(f"XML annotation {tag} already exists.")
+            return original_text
+        else:
+            # 正常添加 tag 。
+            return ContentAnnotator.annotate_with_xml(
+                tag=tag,
+                original_text=original_text,
+            )
 
     @staticmethod
     def annotate_with_html(
