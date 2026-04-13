@@ -1,14 +1,15 @@
 """
 Source: https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/langchain_toolkit/model_factory/specific_llm_factory.py
 
-来自llm_factory，但是并不使用openai兼容API，而是使用各家具体的client。
+来自 llm_factory ，但是并不使用 openai 兼容 API ，而是使用各家具体的 client 。
 
 未来改动: 由于科研导向需求，该工具未来做出以下改动:
-    - 中间件: 自行维护各种API过于费力，未来考虑使用如LiteLLM，仅维护配置文件，不再进行具体实现。
+    - 中间件: 自行维护各种 API 过于费力，未来考虑使用如 LiteLLM ，仅维护配置文件，不再进行具体实现。
     - 中间商: 考虑支付部分比例服务器，使用中间商统一服务。
 """
 
 from __future__ import annotations
+from loguru import logger
 
 import os
 from dotenv import load_dotenv
@@ -20,7 +21,7 @@ if TYPE_CHECKING:
 
 class SpecificLLMFactory:
     """
-    以每个模型提供商的具体方法实现的LLM-factory。
+    以每个模型提供商的具体方法实现的 LLM-factory 。
     """
     # ====主要方法。====
     @staticmethod
@@ -30,7 +31,7 @@ class SpecificLLMFactory:
         model_configs: dict = None,
     ) -> BaseChatModel:
         """
-        使用strategy-pattern封装的全部的方法。
+        使用 strategy-pattern 封装的全部的方法。
 
         复杂构造仍需要传递对象参数。
         可以直接使用该工具类中其他方法。
@@ -77,10 +78,10 @@ class SpecificLLMFactory:
     ) -> BaseChatModel:
         from langchain_google_genai import ChatGoogleGenerativeAI
         llm = ChatGoogleGenerativeAI(
-            model=model_name,  # google这个kwarg只能指定为model。
-            # base_url=os.environ['GEMINI_API_BASE_URL'],  # google这个kwarg不需要指定。
+            model=model_name,  # google 这个 kwarg 只能指定为 model 。
+            # base_url=os.environ['GEMINI_API_BASE_URL'],  # google 这个 kwarg 不需要指定。
             api_key=os.environ['GEMINI_API_KEY'],
-            transport='rest',  # 需要指定服务通信的网络协议为RESTful HTTP API，否则默认的grpc在使用代理服务时总是有问题。
+            transport='rest',  # 需要指定服务通信的网络协议为 RESTful HTTP API ，否则默认的 grpc 在使用代理服务时总是有问题。
             **(model_configs or {}),
         )
         return llm
@@ -138,19 +139,19 @@ class SpecificLLMFactory:
         最简单的方法，几乎没有迁移成本，并且支持的模型很多。
 
         注意:
-            - model_name的命名风格与远程client不同。
+            - model_name 的命名风格与远程 client 不同。
 。
         ollama可以自行管理:
             - 自启动和关闭模型。
-            - 多client并保持线程安全。
+            - 多 client 并保持线程安全。
 
         Args:
             model_name (str): 具体的模型。
-                实际为Literal，在 https://ollama.com/ 查看。有命名空间，需要区别checkpoint等。
-            model_configs (dict, optional): 对于ChatOllama构造指定的kwargs。
+                实际为Literal，在 https://ollama.com/ 查看。有命名空间，需要区别 checkpoint 等。
+            model_configs (dict, optional): 对于 ChatOllama 构造指定的 kwargs 。
 
         Returns:
-            BaseChatModel: langchain中可用于对话的LLM。
+            BaseChatModel: langchain 中可用于对话的 LLM 。
         """
         from langchain_ollama import ChatOllama
         llm = ChatOllama(
