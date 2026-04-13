@@ -1,5 +1,5 @@
 """
-llm构建时model_configs这个参数的构造方法。
+llm 构建时 model_configs 这个参数的构造方法。
 """
 
 from __future__ import annotations
@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 class ModelConfigsBuilder:
     """
-    构建 model_configs 这个参数的方法。model_configs会用于构建llm。
+    构建 model_configs 这个参数的方法。model_configs 会用于构建 llm 。
 
     函数式编程，无后效性。
     """
