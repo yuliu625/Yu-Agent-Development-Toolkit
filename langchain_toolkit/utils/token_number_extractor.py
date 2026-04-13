@@ -1,10 +1,22 @@
 """
-从AIMessage中获得消耗的token数量。
+Sources:
+    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/
 
-这个工具根据langchain中具体厂商的返回信息格式构建，会持续更新。
+References:
+    None
+
+Synopsis:
+    从 AIMessage 中获得消耗的 token 数量。
+
+Notes:
+    这个工具根据 langchain 中具体厂商的返回信息格式构建，会持续更新。
+
+    Refactor:
+        在通过 gateway 统一构建和管理后，可仅保留 openai 一种方法。
 """
 
 from __future__ import annotations
+from loguru import logger
 
 from typing import TYPE_CHECKING, Literal
 if TYPE_CHECKING:
@@ -13,8 +25,9 @@ if TYPE_CHECKING:
 
 class TokenNumberExtractor:
     """
-    根据具体厂商返回的AIMessage的schema，针对性提取代表当前ai_message的token数量。
+    根据具体厂商返回的 AIMessage 的 schema ，针对性提取代表当前 ai_message 的 token 数量。
     """
+
     @staticmethod
     def extract_token_number_from_ai_message(
         ai_message: AIMessage,
@@ -50,7 +63,7 @@ class TokenNumberExtractor:
         ai_message: AIMessage,
     ) -> int:
         """
-        仅dashscope的返回信息和其他client不一样。
+        仅 dashscope 的返回信息和其他 client 不一样。
         """
         token_number = ai_message.response_metadata['token_usage']['output_tokens']
         assert isinstance(token_number, int)
