@@ -1,4 +1,4 @@
 """
-可复用的agent的定义。
+Basic definition of agents.
 """
 
