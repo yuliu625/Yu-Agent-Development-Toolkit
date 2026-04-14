@@ -1,10 +1,11 @@
 """
-以factory-pattern构建的LLM获取方法。
+Factories that create LLM objects.
 
-通用的factory，宽松的strategy-pattern。可以进一步指定进行二次改写。
+Notes:
+    当前 package 经过一次重构，目前的方法仅为 agent 层面的实现。
 
-这package包括:
-    - llm_factory: 最主要的方法，封装了OpenAI-API的LLM。
-    - local_llm_factory: 本地模型的使用方法，需要进行具体改写和指定。
+    Model 层面的实现目前均以中间 microservice 独立构建，具体可查看:
+        - https://github.com/yuliu625/Yu-AI-Inference-Stack
+        - https://github.com/yuliu625/Yu-AI-Inference-Manifests
 """
 
