@@ -5,8 +5,8 @@
 from __future__ import annotations
 import pytest
 
-from agnostic_utils.json_input_processor import JsonInputProcessor
-from typing import TYPE_CHECKING
+from content_processors.json_input_processor import JsonInputProcessor
+
 # if TYPE_CHECKING:
 
 
