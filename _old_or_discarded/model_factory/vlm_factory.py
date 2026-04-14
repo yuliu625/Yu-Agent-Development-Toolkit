@@ -2,12 +2,13 @@
 具有视觉能力的VLM的factory。
 
 未继续更新这个模块的原因:
-    - 最早构建这些方法源于，在llama-index，一些单模态和多模态的模型是有区别的。
-        而在langchain中，单模态和多模态通常统一被chat-model支持。因此没有明显的需求去构建额外的VLMFactory。
-        如果有必要，也是在BaseLLMFactory基础上额外指定参数，构建新的工厂。
+    - 最早构建这些方法源于，在 llama-index ，一些单模态和多模态的模型是有区别的。
+        而在 langchain 中，单模态和多模态通常统一被 chat-model 支持。因此没有明显的需求去构建额外的 VLMFactory 。
+        如果有必要，也是在 BaseLLMFactory 基础上额外指定参数，构建新的工厂。
 """
 
 from __future__ import annotations
+from loguru import logger
 
 from langchain_openai import ChatOpenAI
 import os
@@ -26,11 +27,11 @@ class VLMFactory:
         """
         不需要参数实现实例化的工厂。
 
-        指定dotenv_path仅为项目相关的情况，例如使用项目的API_KEY。
+        指定 dotenv_path 仅为项目相关的情况，例如使用项目的 API_KEY 。
         这些初始化操作可以更大的项目中删除并自行管理环境变量的导入。
 
         Args:
-            dotenv_path (str): .env文件的路径。不指定会自行寻找。
+            dotenv_path (str): .env 文件的路径。不指定会自行寻找。
         """
         load_dotenv(dotenv_path=dotenv_path, override=True)
 
@@ -40,11 +41,11 @@ class VLMFactory:
         model_configs: dict = None,
     ) -> BaseChatModel:
         """
-        获得qwen的VLM。
-        由于现有的各种agent-framework对于VLM不完全支持，这里专门去使用。
+        获得 qwen 的 VLM 。
+        由于现有的各种 agent-framework 对于 VLM 不完全支持，这里专门去使用。
 
         Returns:
-            langchain中的MultiModalLLM。这里是qwen-vl-max，我默认使用这个。
+            langchain 中的 MultiModalLLM 。这里是 qwen-vl-max ，我默认使用这个。
         """
         dashscope_multi_modal_llm = ChatOpenAI(
             model_name=model_name,
