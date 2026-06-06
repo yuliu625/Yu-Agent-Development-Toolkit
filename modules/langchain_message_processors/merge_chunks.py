@@ -1,6 +1,6 @@
 """
 Sources:
-    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/content_processors/langchain_message_processors/merge_chunks.py
+    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/modules/content_processors/langchain_message_processors/merge_chunks.py
 
 References:
     langchain_core.messages::message_chunk_to_message
@@ -56,7 +56,7 @@ def merge_chunks_into_message(
             没有类型指定，会还原为 BaseMessage 。可以使用 isinstance 或者 cast 方法。
     """
     message = message_chunk_to_message(
-        chunk=sum(chunks, chunks[0]),  # 直接使用sum方法，简化合并chunk操作。BaseMessageChunk实现了 '+' 运算符。
+        chunk=sum(chunks, chunks[0]),  # 直接使用 sum 方法，简化合并 chunk 操作。BaseMessageChunk 实现了 '+' 运算符。
     )
     return message
 
