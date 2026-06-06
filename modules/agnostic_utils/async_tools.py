@@ -1,8 +1,16 @@
 """
-异步编程相关。
+Sources:
+    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/modules/langchain_toolkit/agnostic_utils/async_tools.py
 
-主要用于LLM development。
-这只是一些改造工具，仅做参考，原始项目是可以一开始就写成异步的。
+References:
+    None
+
+Synopsis:
+    异步编程相关。
+
+Notes:
+    主要用于 LLM development 。
+    这只是一些改造工具，仅做参考，原始项目是可以一开始就写成异步的。
 """
 
 from __future__ import annotations
@@ -32,7 +40,7 @@ async def run_parallel(async_func: Callable, arg_list: list[Tuple]) -> Tuple[Any
 
     Args:
         async_func (Callable): 目标要运行的异步程序。
-        arg_list (list[Tuple(args, kwargs)]): 需要传输给目标异步函数的参数，包括args和kwargs。
+        arg_list (list[Tuple(args, kwargs)]): 需要传输给目标异步函数的参数，包括 args 和 kwargs 。
 
     Returns:
         Tuple[result1, result2, ...]: 以原本调用顺序的结果。
