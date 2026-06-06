@@ -1,6 +1,6 @@
 """
 Sources:
-    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/langchain_toolkit/agents/base_agent_v1.py
+    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/modules/langchain_toolkit/agents/base_agent_v1.py
 
 References:
     None
@@ -34,7 +34,7 @@ from __future__ import annotations
 from loguru import logger
 
 # 下面这个工具类是必要的，需要在具体项目中设定具体的导入路径。
-from content_processors.json_output_extractor import JsonOutputExtractor
+from modules.content_processors.json_output_extractor import JsonOutputExtractor
 
 from langchain_core.messages import AIMessage
 from collections import Counter
