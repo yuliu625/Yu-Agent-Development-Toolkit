@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 import pytest
-import asyncio
 from loguru import logger
 
-from langchain_toolkit.agents.base_agent_v2 import BaseAgent
-from langchain_toolkit.model_factory.local_llm_factory import LocalLLMFactory
+from modules.langchain_toolkit.agents import BaseAgent
+from modules.langchain_toolkit import LocalLLMFactory
 
 from langchain_core.messages import (
     SystemMessage,
