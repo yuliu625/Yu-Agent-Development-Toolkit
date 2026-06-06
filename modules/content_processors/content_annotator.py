@@ -1,6 +1,6 @@
 """
 Sources:
-    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/content_processors/content_annotator.py
+    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/modules/content_processors/content_annotator.py
 
 References:
     None
@@ -32,6 +32,7 @@ class ContentAnnotator:
     """
     内容注释器。
     """
+
     @staticmethod
     def safe_annotate_with_html(
         tag: str,
