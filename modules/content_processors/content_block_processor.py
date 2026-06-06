@@ -1,6 +1,6 @@
 """
 Sources:
-    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/content_processors/content_block_processor.py
+    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/modules/content_processors/content_block_processor.py
 
 References:
     None
@@ -10,7 +10,7 @@ Synopsis:
 
 Notes:
     主要场景为:
-        - VLM的HumanMessage.content的处理方法。
+        - VLM 的 HumanMessage.content 的处理方法。
 """
 
 from __future__ import annotations
@@ -29,6 +29,7 @@ class ContentBlockProcessor:
     多模态情况下，HumanMessage 的 content 字段需要是 list[dict] ，即 HumanMessage(content=[text_dict | image_dict]) 。
     使用该工具类处理得到的 dict ，还需要组合为一个 list 。
     """
+
     # ==== 主要方法。 ====
     @staticmethod
     def get_image_content_block_from_base64(
