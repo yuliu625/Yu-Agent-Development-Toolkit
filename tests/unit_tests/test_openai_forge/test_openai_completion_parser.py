@@ -6,13 +6,13 @@ from __future__ import annotations
 import pytest
 from loguru import logger
 
-from openai_forge.openai_completion_parser import (
+from modules.openai_forge import (
     OpenAICompletionParser,
 )
 
 from openai.types import Completion
 
-from typing import TYPE_CHECKING, Mapping
+from typing import Mapping
 # if TYPE_CHECKING:
 
 
