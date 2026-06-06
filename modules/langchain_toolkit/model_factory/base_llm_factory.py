@@ -1,12 +1,12 @@
 """
 Sources:
-    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/langchain_toolkit/model_factory/base_llm_factory.py
+    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/modules/langchain_toolkit/model_factory/base_llm_factory.py
 
 References:
     None
 
 Synopsis:
-    生成LLM的工厂。
+    生成 LLM 的工厂。
 
 Notes:
     以 openai 兼容 API 实现的 LLM-factory 。
