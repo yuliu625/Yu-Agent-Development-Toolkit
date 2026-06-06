@@ -9,8 +9,9 @@
 """
 
 from __future__ import annotations
+from loguru import logger
 
-# 需要的该包中的其他工具。引入其他项目建议直接将2个文件都复制，再构建具体的prompt_template_factory，从而完全不修改这2个文件。
+# 需要的该包中的其他工具。引入其他项目建议直接将 2 个文件都复制，再构建具体的 prompt_template_factory ，从而完全不修改这 2 个文件。
 from .prompt_template_loader import PromptTemplateLoader
 
 from pathlib import Path
@@ -22,35 +23,35 @@ if TYPE_CHECKING:
 
 class BasePromptTemplateFactory:
     """
-    prompt-template-factory的基础方法。
+    prompt-template-factory 的基础方法。
 
-    这个实现用于agent设定和持续对话。可以使用PromptTemplateLoader构建其他的应用。
+    这个实现用于agent设定和持续对话。可以使用 PromptTemplateLoader 构建其他的应用。
 
     约定:
-        - 使用jinja2文件管理prompt-template。不向下兼容。
-        - 以加载system-message-prompt-template获取chat-prompt-template。
-        - 以加载human-message-prompt-template进行持续对话。
+        - 使用 jinja2 文件管理 prompt-template 。不向下兼容。
+        - 以加载 system-message-prompt-template 获取 chat-prompt-template 。
+        - 以加载 human-message-prompt-template 进行持续对话。
 
     预期使用:
-        - system_message_prompt_template和human_message_prompt_template在同一文件夹，以名称前缀区分类别。
-        - 所有的派生类，仅在构造方法中额外选择sub-dir。
+        - system_message_prompt_template 和 human_message_prompt_template 在同一文件夹，以名称前缀区分类别。
+        - 所有的派生类，仅在构造方法中额外选择 sub-dir 。
 
     封装:
-        - 路径管理。不同的prompt文件树管理，默认使用2级文件夹层次化管理。
-        - prompt加载。返回langchain可用的PromptTemplate。
+        - 路径管理。不同的 prompt 文件树管理，默认使用2级文件夹层次化管理。
+        - prompt 加载。返回 langchain 可用的 PromptTemplate 。
     """
     def __init__(
         self,
         prompt_templates_dir: str | Path = None,
     ):
         """
-        指定prompt-template文件存放的文件夹。
+        指定 prompt-template 文件存放的文件夹。
 
         如果不指定具体文件夹，默认会使用该文件所在的同一文件夹。
-        指定的目的仅仅为从包外部获取prompt-template。
+        指定的目的仅仅为从包外部获取 prompt-template 。
 
         Args:
-            prompt_templates_dir (Union[str, Path, None]): 存放prompt-template的文件夹的路径。
+            prompt_templates_dir (Union[str, Path, None]): 存放 prompt-template 的文件夹的路径。
         """
         if prompt_templates_dir is None:
             self.prompt_templates_dir = Path(__file__).parent
@@ -63,23 +64,23 @@ class BasePromptTemplateFactory:
         system_message_prompt_template_name: str,
     ) -> ChatPromptTemplate:
         """
-        可持续使用的chat-prompt-template。已给出system-message-prompt-template。
+        可持续使用的 chat-prompt-template 。已给出 system-message-prompt-template 。
 
-        如果system-message-prompt-template中含有参数，使用partial方法，再进行持续对话。
+        如果 system-message-prompt-template 中含有参数，使用 partial 方法，再进行持续对话。
 
         注意:
-            - 构建message-prompt-template时的命名，需要以 system_message_prompt_template_ 作为前缀。
+            - 构建 message-prompt-template 时的命名，需要以 system_message_prompt_template_ 作为前缀。
 
         Args:
-            system_message_prompt_template_name (str): strategy-patten封装对于message-prompt-template的获取。
+            system_message_prompt_template_name (str): strategy-patten 封装对于 message-prompt-template 的获取。
 
         Returns:
-            ChatPromptTemplate: 可持续使用的chat-prompt-template。
+            ChatPromptTemplate: 可持续使用的 chat-prompt-template 。
         """
         # 处理路径。
         system_message_prompt_template_path = (
             self.prompt_templates_dir
-            # / 'system'  # 取消这行注释，修改和增加sub-dir。但默认不这样做。
+            # / 'system'  # 取消这行注释，修改和增加 sub-dir 。但默认不这样做。
             / f"system_message_prompt_template_{system_message_prompt_template_name}.j2"
         )
         # 加载。
@@ -95,24 +96,24 @@ class BasePromptTemplateFactory:
         system_message_prompt_template_format_kwargs: dict | None = None,
     ) -> ChatPromptTemplate:
         """
-        可持续使用的chat-prompt-template。已给出system-message-prompt-template。
+        可持续使用的 chat-prompt-template 。已给出 system-message-prompt-template 。
 
-        如果system-message-prompt-template中的参数，已执行format方法。
+        如果 system-message-prompt-template 中的参数，已执行 format 方法。
 
         注意:
-            - 构建message-prompt-template时的命名，需要以 system_message_prompt_template_ 作为前缀。
+            - 构建 message-prompt-template 时的命名，需要以 system_message_prompt_template_ 作为前缀。
 
         Args:
-            system_message_prompt_template_name (str): strategy-patten封装对于message-prompt-template的获取。
+            system_message_prompt_template_name (str): strategy-patten 封装对于 message-prompt-template 的获取。
             system_message_prompt_template_format_kwargs (Union[dict, None]): 对
 
         Returns:
-            ChatPromptTemplate: 可持续使用的chat-prompt-template。
+            ChatPromptTemplate: 可持续使用的 chat-prompt-template 。
         """
         # 处理路径。
         system_message_prompt_template_path = (
             self.prompt_templates_dir
-            # / 'system'  # 取消这行注释，修改和增加sub-dir。但默认不这样做。
+            # / 'system'  # 取消这行注释，修改和增加 sub-dir 。但默认不这样做。
             / f"system_message_prompt_template_{system_message_prompt_template_name}.j2"
         )
         # 加载。
@@ -128,23 +129,23 @@ class BasePromptTemplateFactory:
         message_prompt_template_name: str,
     ) -> HumanMessagePromptTemplate:
         """
-        加载持续对话的message-prompt-template。
+        加载持续对话的 message-prompt-template 。
 
-        在agent-system中，给出指令的身份是human。
+        在 agent-system 中，给出指令的身份是 human 。
 
         注意:
-            - 构建message-prompt-template时的命名，需要以 human_message_prompt_template_ 作为前缀。
+            - 构建 message-prompt-template 时的命名，需要以 human_message_prompt_template_ 作为前缀。
 
         Args:
-            message_prompt_template_name (str): strategy-patten封装对于message-prompt-template的获取。
+            message_prompt_template_name (str): strategy-patten 封装对于 message-prompt-template 的获取。
 
         Returns:
-            HumanMessagePromptTemplate: 用于和agent对话的message-prompt-template。
+            HumanMessagePromptTemplate: 用于和 agent 对话的 message-prompt-template 。
         """
         # 处理路径。
         human_message_prompt_template_path = (
             self.prompt_templates_dir
-            # / 'message'  # 取消这行注释，修改和增加sub-dir。但默认不这样做。
+            # / 'message'  # 取消这行注释，修改和增加 sub-dir 。但默认不这样做。
             / f"human_message_prompt_template_{message_prompt_template_name}.j2"
         )
         # 加载。
@@ -159,17 +160,17 @@ class BasePromptTemplateFactory:
         prompt_template_name: str,
     ) -> PromptTemplate:
         """
-        冗余方法。从文件加载prompt-template。
+        冗余方法。从文件加载 prompt-template 。
 
-        使用我已经构建的加载工具。配套方法，封装原始工具为strategy-pattern。
+        使用我已经构建的加载工具。配套方法，封装原始工具为 strategy-pattern 。
         这个方法会直接操作字符串，少数情况可能使用。
 
         Args:
-            prompt_template_name (str): prompt-template的名字。不含扩展名，约定指定为j2文件。
+            prompt_template_name (str): prompt-template 的名字。不含扩展名，约定指定为 j2 文件。
 
         Returns:
-            PromptTemplate: langchain.prompts.PromptTemplate，接入langchain的runnable系统。
-                system-prompt-template和message-prompt-template通用。
+            PromptTemplate: langchain.prompts.PromptTemplate，接入 langchain 的 runnable 系统。
+                system-prompt-template 和 message-prompt-template 通用。
                 仍需要进行的相关具体操作包括:
                     - partial
                     - invoke
@@ -187,7 +188,7 @@ class BasePromptTemplateFactory:
         """
         指定子文件夹。
 
-        进行分类控制，代码和prompt-template文件分离。
+        进行分类控制，代码和 prompt-template 文件分离。
 
         使用情况:
             - 多角色。
@@ -195,7 +196,7 @@ class BasePromptTemplateFactory:
 
         注意:
             - 约定该方法由继承的派生类仅调用一次。
-            - system_message_prompt_template和human_message_prompt_template的控制由具体方法实现，而不是对象所处的路径。
+            - system_message_prompt_template 和 human_message_prompt_template 的控制由具体方法实现，而不是对象所处的路径。
 
         Args:
             sub_dir (Union[str, Path]): 子文件夹的相对路径。
