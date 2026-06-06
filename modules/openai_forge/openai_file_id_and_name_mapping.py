@@ -1,6 +1,6 @@
 """
 Sources:
-    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/openai_forge/openai_file_id_and_name_mapping.py
+    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/modules/openai_forge/openai_file_id_and_name_mapping.py
 
 References:
 
