@@ -6,11 +6,11 @@ from __future__ import annotations
 import pytest
 from loguru import logger
 
-from langchain_toolkit.model_factory.local_llm_factory import LocalLLMFactory
+from modules.langchain_toolkit import LocalLLMFactory
 
 from pydantic import BaseModel, Field
 
-from typing import TYPE_CHECKING
+
 # if TYPE_CHECKING:
 
 
