@@ -7,6 +7,7 @@ Synopsis:
     构造可以进行结构化输出的LLM。
 
 Notes:
+
 """
 
 from __future__ import annotations
