@@ -6,11 +6,11 @@ from __future__ import annotations
 import pytest
 from loguru import logger
 
-from openai_forge.openai_file_id_and_name_mapping import (
+from modules.openai_forge.openai_file_id_and_name_mapping import (
     OpenAIFileIdAndNameMappingMethods,
 )
 
-from typing import TYPE_CHECKING, Sequence, Mapping
+from typing import Sequence, Mapping
 # if TYPE_CHECKING:
 
 
