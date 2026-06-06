@@ -1,6 +1,6 @@
 """
 Sources:
-    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/content_processors/json_output_extractor.py
+    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/modules/content_processors/json_output_extractor.py
 
 References:
     None
@@ -87,7 +87,7 @@ class JsonOutputExtractor:
                 - json: 最严格，需要完全符合 json 定义。
                 - json5: 符合 js 的定义可以正常解析。
                 - json-repair: 大概有 json 数据的结构，会尝试自动修复。
-                默认选择json-repair，这样最节省 LLM 推理资源。需要 schema-check 后面会有进一步判断操作。
+                默认选择 json-repair ，这样最节省 LLM 推理资源。需要 schema-check 后面会有进一步判断操作。
             schema_pydantic_base_model (type[BaseModel], optional): pydantic 定义的数据类。
                 当有这个参数，会进行 structured-output 检测。
             schema_check_type (Literal['dict', 'list']): 检验 schema 的方法。2 种方式为 dict 或 list 。
@@ -105,28 +105,28 @@ class JsonOutputExtractor:
             index_to_choose=index_to_choose,
         )
         if not raw_json_str:
-            return None  # 输出1。没有 json-output 。
-        # 转换为 python 中的 structured-data
+            return None  # 输出 1 。没有 json-output 。
+        # 转换为 python 中的 structured-data 。
         raw_structured_data = JsonOutputExtractor.load_structured_data_from_raw_json_str(
             raw_json_str=raw_json_str,
             json_loader_name=json_loader_name,
         )
         if not raw_structured_data:
-            return None  # 输出2。structured-data 格式错误。
+            return None  # 输出 2 。structured-data 格式错误。
         # schema 检测。只有需要的时候才检测。
         if schema_pydantic_base_model:
             if schema_check_type == 'dict' and not JsonOutputExtractor.check_dict_schema(
                 raw_dict_structured_data=raw_structured_data,
                 schema_pydantic_base_model=schema_pydantic_base_model,
             ):
-                return None  # 输出3。需要 schema 检测，并且检测未通过。(not None，2个条件都为True。)
+                return None  # 输出 3 。需要 schema 检测，并且检测未通过。(not None，2 个条件都为True。)
             elif schema_check_type == 'list' and not JsonOutputExtractor.check_list_schema(
                 raw_list_structured_data=raw_structured_data,
                 schema_pydantic_base_model=schema_pydantic_base_model,
             ):
-                return None  # 输出3。需要 schema 检测，并且检测未通过。(not None，2个条件都为True。)
-        # 通过所有的检测。或者不需要schema检测。
-        return raw_structured_data  # 输出4。不需要 schema 检测。或者，需要 schema 检测，同时检测通过。
+                return None  # 输出 3 。需要 schema 检测，并且检测未通过。(not None，2 个条件都为 True 。)
+        # 通过所有的检测。或者不需要 schema 检测。
+        return raw_structured_data  # 输出 4 。不需要 schema 检测。或者，需要 schema 检测，同时检测通过。
 
     # ==== 基础方法。正则匹配。 ====
     @staticmethod
@@ -154,10 +154,10 @@ class JsonOutputExtractor:
         # 如果没有找到。一般在 prompt 中指定，就不会发生这种情况。
         if not matches:
             logger.warning("No JSON outputs.")
-            return None  # 输出1。提取失败。
+            return None  # 输出 1 。提取失败。
         # 提取结果。可能需要根据任务而定。
         raw_json_str: str = matches[index_to_choose]
-        return raw_json_str  # 输出2。提取成功。
+        return raw_json_str  # 输出 2 。提取成功。
 
     # ==== 基础方法。加载json。 ====
     @staticmethod
@@ -172,9 +172,9 @@ class JsonOutputExtractor:
             raw_json_str (str): 可能是 str 的 structured-data ，需要转换为 python 中的 structured-data 。
             json_loader_name (Literal['json', 'json5', 'json-repair']): 加载 json 数据的方法。3 个加载包的区别是:
                 - json: 最严格，需要完全符合 json 定义。
-                - json5: 符合js的定义可以正常解析。
+                - json5: 符合 js 的定义可以正常解析。
                 - json-repair: 大概有 json 数据的结构，会尝试自动修复。
-                默认选择json-repair，这样最节省 LLM 推理资源。需要 schema-check 后面会有进一步判断操作。
+                默认选择 json-repair ，这样最节省 LLM 推理资源。需要 schema-check 后面会有进一步判断操作。
 
         Returns:
             Union[Union[dict, list], None]:
@@ -182,7 +182,7 @@ class JsonOutputExtractor:
                 - None: 转换失败。
         """
         try:
-            # 尝试进行转换。# 输出2。成功转换。
+            # 尝试进行转换。# 输出 2 。成功转换。
             if json_loader_name == 'json':
                 return json.loads(raw_json_str)
             elif json_loader_name == 'json5':
@@ -194,7 +194,7 @@ class JsonOutputExtractor:
             logger.error(e)
             logger.error(raw_json_str)
             logger.error("Fail to load structured data from raw_json_str.")
-            return None  # 输出1。structured data 格式错误。
+            return None  # 输出 1 。structured data 格式错误。
 
     # ==== 基础方法。检查schema。 ====
     @staticmethod
@@ -232,9 +232,9 @@ class JsonOutputExtractor:
             # 转换失败。打印错误，打印原始字符串。
             logger.error(e)
             logger.error(raw_dict_structured_data)
-            logger.error("Fail in dict schema.")
-            return None  # 输出1。不符合 dataclass 定义。可能是字段，可能是数据类型。
-        return raw_dict_structured_data  # 输出2。通过检测。但是不进行额外处理。
+            logger.error("Failed in dict schema.")
+            return None  # 输出 1 。不符合 dataclass 定义。可能是字段，可能是数据类型。
+        return raw_dict_structured_data  # 输出 2 。通过检测。但是不进行额外处理。
 
     # ==== 基础方法。检查schema。 ====
     @staticmethod
@@ -275,9 +275,9 @@ class JsonOutputExtractor:
             # 转换失败。打印错误，打印原始字符串。
             logger.error(e)
             logger.error(raw_list_structured_data)
-            logger.error("Fail in list schema.")
-            return None  # 输出1。不符合 dataclass 定义。可能是字段，可能是数据类型。
-        return raw_list_structured_data  # 输出2。通过检测。但是不进行额外处理。
+            logger.error("Failed in list schema.")
+            return None  # 输出 1 。不符合 dataclass 定义。可能是字段，可能是数据类型。
+        return raw_list_structured_data  # 输出 2 。通过检测。但是不进行额外处理。
 
     # ==== 暂未添加的方法。 ====
     @staticmethod
