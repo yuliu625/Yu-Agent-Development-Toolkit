@@ -1,8 +1,19 @@
 """
-项目环境变量的处理工具。
+Sources:
+    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/modules/langchain_toolkit/agnostic_utils/dotenv_processor.py
+
+References:
+    None
+
+Synopsis:
+    项目环境变量的处理工具。
+
+Notes:
+
 """
 
 from __future__ import annotations
+from loguru import logger
 
 from dotenv import load_dotenv
 
