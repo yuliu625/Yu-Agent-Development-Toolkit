@@ -1,6 +1,6 @@
 """
 Sources:
-    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/content_processors/json_input_processor.py
+    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/modules/content_processors/json_input_processor.py
 
 References:
     None
