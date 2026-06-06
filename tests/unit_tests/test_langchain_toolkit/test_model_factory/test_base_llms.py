@@ -13,11 +13,10 @@ LLM的测试工程。
 from __future__ import annotations
 import pytest
 
-from langchain_toolkit.model_factory.base_llm_factory import BaseLLMFactory
+from modules.langchain_toolkit import BaseLLMFactory
 
 from langchain_core.messages import AIMessage
 
-from typing import TYPE_CHECKING
 # if TYPE_CHECKING:
 
 _text_message_1 = "你的版本型号是什么？"
