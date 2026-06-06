@@ -1,12 +1,21 @@
 """
-进程管理器。独立持久运行通用工具。
+Sources:
+    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/modules/langchain_toolkit/agnostic_utils/process_manager.py
 
-预期场景:
-    - 定时运行任务。
-    - 运行可能会中断的实验，需要重启。
+References:
+    None
+
+Synopsis:
+    进程管理器。独立持久运行通用工具。
+
+Notes:
+    预期场景:
+        - 定时运行任务。
+        - 运行可能会中断的实验，需要重启。
 """
 
 from __future__ import annotations
+from loguru import logger
 
 import subprocess
 import time
@@ -23,9 +32,10 @@ class ProcessManager:
     进程运行管理工具。
 
     实现:
-        - 暂时使用subprocess.run，为阻塞执行。
-        - 后续使用subprocess.Popen，非阻塞执行并有更具体控制。
+        - 暂时使用 subprocess.run ，为阻塞执行。
+        - 后续使用 subprocess.Popen ，非阻塞执行并有更具体控制。
     """
+
     # ====基础方法。====
     @staticmethod
     def run_process(
