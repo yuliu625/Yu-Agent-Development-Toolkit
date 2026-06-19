@@ -1,6 +1,6 @@
 """
 Sources:
-    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/modules/content_processors/langchain_message_processors/reasoning_message_processor.py
+    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/src/content_processors/langchain_message_processors/reasoning_message_processor.py
 
 References:
     None
