@@ -1,6 +1,6 @@
 """
 Sources:
-    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/modules/content_processors/langchain_message_processors/merge_chunks.py
+    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/src/content_processors/langchain_message_processors/merge_chunks.py
 
 References:
     langchain_core.messages::message_chunk_to_message
