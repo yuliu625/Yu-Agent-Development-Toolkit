@@ -6,7 +6,7 @@ from __future__ import annotations
 import pytest
 from loguru import logger
 
-from modules.openai_forge.openai_file_id_and_name_mapping import (
+from src.openai_forge.openai_file_id_and_name_mapping import (
     OpenAIFileIdAndNameMappingMethods,
 )
 
