@@ -5,7 +5,7 @@
 from __future__ import annotations
 import pytest
 
-from modules.content_processors.structured_data_extractor import StructuredDataExtractor
+from src.content_processors.structured_data_extractor import StructuredDataExtractor
 from tests.data.structured_data_extractor_cases import STRUCTURED_DATA_EXTRACTOR_CASES
 
 
