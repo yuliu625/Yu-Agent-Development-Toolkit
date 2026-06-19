@@ -5,7 +5,7 @@
 from __future__ import annotations
 import pytest
 
-from modules.langchain_toolkit.agents import BaseAgent
+from src.langchain_toolkit.agents import BaseAgent
 
 
 # if TYPE_CHECKING:
