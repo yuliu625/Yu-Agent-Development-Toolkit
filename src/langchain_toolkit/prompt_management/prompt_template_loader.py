@@ -1,6 +1,6 @@
 """
 Sources:
-    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/modules/langchain_toolkit/prompt_management/prompt_template_loader.py
+    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/src/langchain_toolkit/prompt_management/prompt_template_loader.py
 
 References:
     None
