@@ -6,7 +6,7 @@ from __future__ import annotations
 import pytest
 from loguru import logger
 
-from modules.langchain_toolkit import LocalLLMFactory
+from src.langchain_toolkit import LocalLLMFactory
 
 from pydantic import BaseModel, Field
 
