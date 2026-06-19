@@ -6,7 +6,7 @@ from __future__ import annotations
 import pytest
 from loguru import logger
 
-from modules.openai_forge import (
+from src.openai_forge import (
     OpenAICompletionParser,
 )
 
