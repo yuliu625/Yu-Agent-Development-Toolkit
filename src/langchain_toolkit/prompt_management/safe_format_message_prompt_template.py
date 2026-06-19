@@ -1,6 +1,6 @@
 """
 Sources:
-    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/modules/langchain_toolkit/prompt_management/safe_format_message_prompt_template.py
+    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/src/langchain_toolkit/prompt_management/safe_format_message_prompt_template.py
 
 References:
     None
