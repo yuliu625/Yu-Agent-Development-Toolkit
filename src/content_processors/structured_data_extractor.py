@@ -1,6 +1,6 @@
 """
 Sources:
-    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/modules/langchain_toolkit/content_processors/structured_data_extractor.py
+    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/src/langchain_toolkit/content_processors/structured_data_extractor.py
 
 References:
     None
