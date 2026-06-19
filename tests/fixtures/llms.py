@@ -5,7 +5,7 @@
 from __future__ import annotations
 import pytest
 
-from modules.langchain_toolkit import BaseLLMFactory
+from src.langchain_toolkit import BaseLLMFactory
 
 
 # if TYPE_CHECKING:
