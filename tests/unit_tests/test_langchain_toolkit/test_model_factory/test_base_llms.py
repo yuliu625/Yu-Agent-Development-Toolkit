@@ -13,7 +13,7 @@ LLM的测试工程。
 from __future__ import annotations
 import pytest
 
-from modules.langchain_toolkit import BaseLLMFactory
+from src.langchain_toolkit import BaseLLMFactory
 
 from langchain_core.messages import AIMessage
 
