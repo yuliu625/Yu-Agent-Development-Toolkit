@@ -1,6 +1,6 @@
 """
 Sources:
-    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/modules/content_processors/langchain_message_processors/message_copier.py
+    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/src/content_processors/langchain_message_processors/message_copier.py
 
 References:
     langchain_core.messages::BaseMessage
