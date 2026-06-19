@@ -8,7 +8,7 @@ from __future__ import annotations
 import pytest
 
 from tests.data.json_output_extractor_cases import JSON_OUTPUT_EXTRACTOR_CASES
-from modules.content_processors.json_output_extractor import JsonOutputExtractor
+from src.content_processors.json_output_extractor import JsonOutputExtractor
 
 
 # if TYPE_CHECKING:
