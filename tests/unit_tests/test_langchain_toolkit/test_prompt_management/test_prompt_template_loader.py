@@ -5,7 +5,7 @@
 from __future__ import annotations
 import pytest
 
-from modules.langchain_toolkit.prompt_management.prompt_template_loader import PromptTemplateLoader
+from src.langchain_toolkit.prompt_management.prompt_template_loader import PromptTemplateLoader
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
