@@ -1,6 +1,6 @@
 """
 Sources:
-    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/modules/content_processors/content_annotator.py
+    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/src/content_processors/content_annotator.py
 
 References:
     None
