@@ -1,6 +1,6 @@
 """
 Sources:
-    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/modules/content_processors/json_output_extractor.py
+    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/src/content_processors/json_output_extractor.py
 
 References:
     None
