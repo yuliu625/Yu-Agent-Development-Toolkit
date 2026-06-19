@@ -1,6 +1,6 @@
 """
 Sources:
-    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/modules/langgraph_toolkit/utils/graph_visualizer.py
+    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/src/langgraph_toolkit/utils/graph_visualizer.py
 
 References:
     None
