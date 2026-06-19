@@ -6,8 +6,8 @@ from __future__ import annotations
 import pytest
 from loguru import logger
 
-from modules.langchain_toolkit.agents import BaseAgent
-from modules.langchain_toolkit import LocalLLMFactory
+from src.langchain_toolkit.agents import BaseAgent
+from src.langchain_toolkit import LocalLLMFactory
 
 from langchain_core.messages import (
     SystemMessage,
